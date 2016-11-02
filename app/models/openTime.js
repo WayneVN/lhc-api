@@ -3,9 +3,7 @@ var mongoose = require('mongoose'),
 
 var OpenTimeSchema = new Schema({
   openTime: String,
-  openDate: String,
   closeTime: String,
-  closeDate: String
 });
 
 OpenTimeSchema.virtual('date')
