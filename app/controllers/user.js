@@ -7,6 +7,7 @@ const User = mongoose.model('User');
 const cors = require('cors');
 const ync = require('async');
 let colors = require("colors");
+let jwt = require('jsonwebtoken');
 
 app.use(cors());
 
@@ -86,12 +87,12 @@ router.post('/login', (req, res, next) => {
       msg: '账号密码不可为空！'
     });
   }
-  if ((username.length>5 && username.length<20 )||
-      (pwd.length>5 && pwd.length<20 )
+  if (!(username.length>5 && username.length<20 )||
+      !(pwd.length>5 && pwd.length<20 )
   ) {
     return res.json({
       status: false,
-      msg: '账号密码长度非法！'
+      msg: '账号密码长度非法！',
     });
   }
 
@@ -102,9 +103,15 @@ router.post('/login', (req, res, next) => {
         msg: '账号密码错误！'
       });
     }
+    req.session.user = {
+      _id: jwt.sign({ _id: user._id }, 'cocodevn')
+    };
+    req.session.save(err => res.json({status: true, msg: err}));
     return res.json({
       status: true,
-      data: user
+      data: {
+        uid: req.session.user
+      }
     });
   });
 });

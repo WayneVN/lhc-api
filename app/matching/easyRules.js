@@ -1,12 +1,47 @@
+const mongoose = require('mongoose');
 const ync = require('async');
 const _ = require('lodash');
+const User = mongoose.model('User');
+const Bet = mongoose.model('Bet');
 
 let match = {
-  init(nums) {
-    this.curNum = nums; //当期开奖号码
+  init(k, v, cb) {
+    this.curNum = [11,13,14,15,16,12,1]; //nums; //当期开奖号码
     this.sumPrice = []; // 总金额
-    this.tbh_lm(44,1,100);
-    console.log(this.sumPrice, '**************log***************');
+    this.uid = k;
+
+    // 查找对应规则 db中types名称为函数名
+    for(let i = 0; i < v.length; i++) {
+      this[v[i].types](v[i]);
+    }
+
+    this.setDb();
+  },
+
+  // 计算结果入库
+  setDb() {
+    let sums = _.sum(this.sumPrice);
+
+    User.update({
+      _id: this.uid
+    }, {
+      $inc: {
+        cou: sums
+      }
+    }, (err, result) => {
+      let id = this.uid;
+      if (!err) {
+        Bet.update({
+          uid: id,
+        }, {
+          $set: { status: true }
+        }, {
+          multi: true
+        }, (e, r) => {
+          console.log(e, r, '**************log***************');
+        });
+      }
+    });
   },
 
   // 计算应得积分
@@ -15,15 +50,11 @@ let match = {
     this.sumPrice.push(sum);
   },
 
-  _switch() {
-
-  },
-
   // 特别号=>号码
-  tbh_hm(userNum, pl, jf) {
+  tbh_hm(v) {
     let tbh = _.last(this.curNum);
-    if (userNum == tbh) {
-      this.countPrice(pl, jf);
+    if (_.replace(v.qm, 'tb', '') == tbh) {
+      this.countPrice(v.xdpl, v.xdjf);
     }
     else {
       this.countPrice(0, 0);

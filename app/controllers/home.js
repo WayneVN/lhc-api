@@ -12,9 +12,9 @@ const easyRules = require('../matching/easyRules');
 let jwt = require('jsonwebtoken');
 let colors = require("colors");
 
-var token = jwt.sign({ name: '张三' }, 'shhhhh');
-
-let decoded = jwt.verify(token, 'shhhhh');
+/* var token = jwt.sign({ name: '张三' }, 'shhhhh');
+ *
+ * let decoded = jwt.verify(token, 'shhhhh');*/
 app.use(cors());
 
 module.exports = function (app) {
@@ -22,14 +22,16 @@ module.exports = function (app) {
 };
 
 router.get('/', function (req, res, next) {
-  let list = [13,15,16,12,25,22,44];
+  /* let list = [13,15,16,12,25,22,44];*/
   /* let a  = easyRules.init(list);*/
   return res.json({
     status: true,
     code: 200,
-    msg: 'success'
+    msg: 'success',
   });
 });
+
+
 
 // 开盘时间
 router.post('/api/v1/setOpenTime', function (req, res, next) {
