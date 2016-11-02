@@ -19,7 +19,6 @@ var UserSchema = new Schema({
     type: Number,
     required: [true, 'count is not?']
   },
-  email: String,
   role: {
     type: String,
     enum: [
@@ -42,6 +41,7 @@ var UserSchema = new Schema({
     type: Date,
     default: Date.now
   },
+  bz: String,
   status: {
     type: Boolean,
     default: true

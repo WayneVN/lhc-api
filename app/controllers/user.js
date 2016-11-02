@@ -16,21 +16,23 @@ module.exports = function (app) {
 };
 
 
-router.post('/signup', (req, res, next) => {
+router.post('/api/v1/signup', (req, res, next) => {
   let {
     body: {
       username,
       pwd,
-      email,
-      cou
+      role,
+      cou,
+      bz = ''
     }
   } = req;
 
   var obj = new User({
     username,
     pwd,
-    email,
-    cou
+    cou,
+    role,
+    bz
   });
 
   let task = [
@@ -42,7 +44,7 @@ router.post('/signup', (req, res, next) => {
     function(result, cb) {
       if (result && result._id) {
         return res.json({
-          status: false,
+          status: 'error',
           msg: '账号已注册!'
         });
       }
@@ -56,12 +58,14 @@ router.post('/signup', (req, res, next) => {
   ync.waterfall(task, (err, result) => {
     if (err) {
       return res.json({
-        status: false,
+        status: 'error',
+        code: 501,
         msg: err
       });
     }
     return res.json({
-      status: true,
+      status: 'success',
+      code: 200,
       msg: '账号注册成功!'
     });
 
