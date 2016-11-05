@@ -11,6 +11,9 @@ const moment = require('moment');
 const Rules = mongoose.model('rules');
 const EasyRules = require('../matching/easyRules');
 const _ = require('lodash');
+let jwt = require('jsonwebtoken');
+const KEYS = 'cocodevn';
+
 
 app.use(cors());
 
@@ -36,8 +39,8 @@ router.post('/api/v1/betplay', function(req, res, next) {
       } = result;
 
       let obj = {
-        username: body.username,
-        uid: body.uid,
+        username: body.username || '测试1',
+        uid: jwt.verify(body.uid, KEYS),
         createTime: new Date(),
         types: body.types,
         qm: body.qm, // 球码
