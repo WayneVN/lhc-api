@@ -17,6 +17,7 @@ var UserSchema = new Schema({
   },
   cou: {
     type: Number,
+    min: 0,
     required: [true, 'count is not?']
   },
   role: {
@@ -31,6 +32,15 @@ var UserSchema = new Schema({
     ],
     default: 'pig',
     required: [true, 'user is level?']
+  },
+  fsl: {
+    type: Number,
+    required: [true, 'is not fs?'],
+    default: 0
+  },
+  reference: {
+    type: String,
+    default: ''
   },
   imgkey: Number,
   createTime: {

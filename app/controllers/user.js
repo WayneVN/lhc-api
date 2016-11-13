@@ -27,8 +27,10 @@ router.post('/api/v1/signup', (req, res, next) => {
     body: {
       username,
       pwd,
-      role,
+      role = 'pig',
       cou,
+      fsl = 0,
+      reference,
       bz = ''
     }
   } = req;
@@ -38,7 +40,9 @@ router.post('/api/v1/signup', (req, res, next) => {
     pwd,
     cou,
     role,
-    bz
+    bz,
+    reference,
+    fsl
   });
 
   let task = [
@@ -112,17 +116,18 @@ router.post('/api/v1/login', (req, res, next) => {
     username: 1,
     _id: 1
   }, (err, user) => {
-    if (err) {
+    if (err || !user) {
       return res.json({
         status: false,
-        msg: '账号密码错误！'
+        msg: '账号密码错误,请联系管理员！'
       });
     }
     let token = jwt.sign({ _id: user._id }, KEYS);
     return res.json({
       status: true,
       code: 200,
-      token: token
+      token: token,
+      username: username
     });
 
   });
@@ -133,12 +138,15 @@ router.get('/api/v1/getUserinfo/:uid', (req, res, next) => {
     let uid = jwt.verify(req.params.uid, KEYS);
     User.findOne({
       _id: uid
+    }, {
+      pwd: 0
     }, (err, result) => {
       if (!_.isEmpty(result)) {
         return res.json({
           status: 'success',
           code: 200,
-          msg: ''
+          msg: '',
+          data: result
         });
       } else {
         return res.json({

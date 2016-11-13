@@ -10,8 +10,14 @@ var BetSchema = new Schema({
   },
   types: String,
   qm: String, // 球码
+  qms: Array,
+  reference: String, //推荐人id
   xdpl: Number, //下单时赔率
   xdjf: Number, // 下注积分
+  isfs: {       // 是否已经返还积分
+    type: Boolean,
+    default: false
+  },
   status: {
     type: Boolean,
     default: false

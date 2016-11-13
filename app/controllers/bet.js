@@ -28,6 +28,7 @@ router.post('/api/v1/betplay', function(req, res, next) {
     body
   } = req;
 
+  // 查找当前赔率 => 扣除积分 => 下单
   findPl(body, next, num => {
 
     OpenTime.findOne((err, result) => {
@@ -37,18 +38,59 @@ router.post('/api/v1/betplay', function(req, res, next) {
         closeTime,
         closeDate
       } = result;
+      let t = Date.parse(new Date());
+      if (t>closeTime || t< openTime) {
+        return res.json({
+          status: 'error',
+          code: 500,
+          msg: '当前为封盘时间!',
+        });
+      }
 
       let obj = {
         username: body.username || '测试1',
         uid: jwt.verify(body.uid, KEYS),
         createTime: new Date(),
+
         types: body.types,
-        qm: body.qm, // 球码
+        qm: (() => {
+          if (body.types == 'qbz') {
+            return _.last(body.qm.split('_'));
+          }
+          if (body.types == 'hx') {
+            return `hx_${_.last(body.qm.split('_'))}`;
+          }
+          if (body.types == 'wsl') {
+            return `wsl_${_.last(body.qm.split('_'))}`;
+          }
+          if (body.types == 'sxl') {
+            return `sxl_${_.last(body.qm.split('_'))}`;
+          }
+          return body.qm;
+        })(), // 球码
+        qms: (() => {
+          if (
+            body.types == 'qbz' ||
+            body.types == 'hx' ||
+            body.types == 'wsl' ||
+            body.types == 'sxl'
+          ) {
+            let a = body.qm.split('_');
+            let list = [];
+            for(var i = 0; i < a.length-1; i++) {
+              list.push(a[i]);
+            }
+            return list;
+          }
+          return [];
+        })(),
         xdpl: num, //下单时赔率
         xdjf: body.xdjf, // 下注积分
       };
 
-      new Bet(obj).save((err, result) => {
+      // 扣除积分
+      kouqian(jwt.verify(body.uid, KEYS), body.xdjf, (err, result) => {
+        new Bet(obj).save((err, result) => {
           if (err) {
             return next(err);
           }
@@ -58,6 +100,8 @@ router.post('/api/v1/betplay', function(req, res, next) {
             msg: '下单成功!',
           });
         });
+      });
+
 
     });
 
@@ -86,10 +130,39 @@ router.post('/api/v1/reckoning', (req, res, next) => {
 
 });
 
+// 查看单个下单记录
+router.get('/api/v1/getBet/:uid', (req, res, next) => {
+  let uid = jwt.verify(req.params.uid, KEYS);
+  Bet.find({
+    uid: uid._id
+  }, {}, {
+    sort:{ createTime: -1 }
+  }, (err, result) => {
+    if (err) {
+      return next(err);
+    }
+    return res.json({
+      status: true,
+      data: result
+    })
+  })
+});
+
 /* 查找赔率*/
 function findPl(body, next, cb) {
   let {types, qm} = body;
-
+  if (types == 'qbz') {
+    qm = _.last(qm.split('_'));
+  }
+  if (types == 'hx') {
+    qm = `hx_${_.last(body.qm.split('_'))}`;
+  }
+  if (types == 'wsl') {
+    qm = `wsl_${_.last(body.qm.split('_'))}`;
+  }
+  if (types == 'sxl') {
+    qm = `${_.last(body.qm.split('_'))}`;
+  }
   Rules.findOne({
     name: qm,
     types: types
@@ -100,5 +173,29 @@ function findPl(body, next, cb) {
       return next(err);
     }
     return cb(result.num);
+  });
+}
+
+/* 扣除积分 */
+function kouqian(id, jf, cb) {
+  User.update({
+    _id: id,
+    cou: {
+      $gt: jf
+    }
+  }, {
+    $inc: {
+      cou: -jf
+    }
+  }, (err, result) => {
+    console.log(result, '扣除积分');
+    if (err) {
+      return res.json({
+        status: 'error',
+        code: 501,
+        msg: err
+      });
+    }
+    return cb(err, result);
   });
 }

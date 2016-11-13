@@ -16,19 +16,8 @@ module.exports = function (app) {
 };
 
 router.get('/initrules/save', function (req, res, next) {
-  tbh_hm();
-  /* tbh_lm();
-   * tbh_bs();
-   * tbh_ws()
-   * zmt_zm();
-   * zmt_bs();
-   * zmt_lm();
-   * zm_hm();
-   * zm_bs();
-   * sums();
-   * sx();
-   * ws();
-   * hx();*/
+  //tbh_hm();
+  tbh_lm();
 });
 
 // 特别号=>号码
@@ -47,29 +36,7 @@ function tbh_hm() {
 
 // 特别号-》两面
 function tbh_lm() {
-  /* 特大
-     特小
-     特单
-     特双
-     尾大
-     合大
-     合小
-     合单
-     合双
-     尾小	*/
-  let list = [
-    'td',
-    'tx',
-    'tdan',
-    'ts',
-    'wd',
-    'hx',
-    'hd',
-    'hd',
-    'hs',
-    'wx',
-    'h'
-  ];
+  let list = ["texiao", "teda", "tedan", "teshuang", "weida", "weixiao", "heda", "hexiao", "hedan", "heshuang"];
 
   for(var i = 0; i < list.length; i++) {
     let obj  = new Rules({
@@ -78,7 +45,7 @@ function tbh_lm() {
       num: 0
     });
     obj.save((err, result) => {
-      console.log(err, result, '特别号=>号码');
+      console.log(err, result, '特别号=>两面');
     });
   }
 }

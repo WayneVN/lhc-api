@@ -31,8 +31,9 @@ router.post('/api/v1/update/', function (req, res, next) {
 });
 
 
-router.get('/api/v1/getrules/tbh_hm', function (req, res, next) {
-  Rules.find({types: 'tbh_hm'},
+// 读取规则
+router.get('/api/v1/getrules/:type', function (req, res, next) {
+  Rules.find({types: req.params.type},
              {
                name: 1,
                num: 1,
@@ -47,21 +48,20 @@ router.get('/api/v1/getrules/tbh_hm', function (req, res, next) {
              );
 });
 
-// 特别号码 -> 号码
 
-router.post('/api/v1/setrules/tbh_hm', function (req, res, next) {
+//更新规则
+router.post('/api/v1/setrules/:type', function (req, res, next) {
   let list = [];
   _.forIn(req.body, function(value, key) {
-    console.log(key,value);
     list.push({
       name: key,
       num: value,
-      types: 'tbh_hm'
+      types: req.params.type
     });
   });
 
 
-  Rules.remove({types:'tbh_hm'},(err, result) => {
+  Rules.remove({types:req.params.type},(err, result) => {
     if (err) {
       return res.json({
         satus: false,
