@@ -128,7 +128,7 @@ router.post('/api/v1/login', (req, res, next) => {
       status: true,
       code: 200,
       token: token,
-      username: userpname
+      username: username
     });
 
   });
