@@ -18,7 +18,7 @@ let colors = require("colors");
 app.use(cors());
 
 module.exports = function (app) {
-  app.use('/', cors(), router);
+  //app.use('/', cors(), router);
 };
 
 router.get('/', function (req, res, next) {
@@ -27,7 +27,7 @@ router.get('/', function (req, res, next) {
   });
 });
 
-router.get('/admin/page/extension', function (req, res, next) {
+router.get('/admin', function (req, res, next) {
   return res.render('admin', {
     title: 'CC System'
   });
