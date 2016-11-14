@@ -9,6 +9,7 @@ const ync = require('async');
 const cors = require('cors');
 const moment = require('moment');
 const Rules = mongoose.model('rules');
+const Qm = mongoose.model('Qm');
 const EasyRules = require('../matching/easyRules');
 const _ = require('lodash');
 let jwt = require('jsonwebtoken');
@@ -118,14 +119,25 @@ router.post('/api/v1/reckoning', (req, res, next) => {
       return next(err);
     }
     let list = _.groupBy(result, 'uid');
-    let dbTask = [];
-    _.forIn(list, (v, k) => {
-      EasyRules.init(k, v);
+    Qm.findOne({}, {
+      name: 1,
+      qm: 1
+    }, {
+      sort:{ createTime: -1 }
+    }, (err, result) => {
+      if (err) {
+        return next(err);
+      }
+
+      _.forIn(list, (v, k) => {
+        EasyRules.init(k, v, result.qm);
+      });
+
+      return res.json({
+        list
+      })
     });
 
-    return res.json({
-       list
-    })
   })
 
 });
@@ -135,6 +147,22 @@ router.get('/api/v1/getBet/:uid', (req, res, next) => {
   let uid = jwt.verify(req.params.uid, KEYS);
   Bet.find({
     uid: uid._id
+  }, {}, {
+    sort:{ createTime: -1 }
+  }, (err, result) => {
+    if (err) {
+      return next(err);
+    }
+    return res.json({
+      status: true,
+      data: result
+    })
+  })
+});
+
+router.get('/api/v1/getUserBet/:uid', (req, res, next) => {
+  Bet.find({
+    uid: req.params.uid
   }, {}, {
     sort:{ createTime: -1 }
   }, (err, result) => {

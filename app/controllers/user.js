@@ -96,6 +96,7 @@ router.post('/api/v1/login', (req, res, next) => {
     username,
     pwd
   };
+  obj.status = true;
 
   if (!username || !pwd) {
     return res.json({
@@ -114,7 +115,7 @@ router.post('/api/v1/login', (req, res, next) => {
 
   User.findOne(obj, {
     username: 1,
-    _id: 1
+    _id: 1,
   }, (err, user) => {
     if (err || !user) {
       return res.json({
@@ -127,7 +128,7 @@ router.post('/api/v1/login', (req, res, next) => {
       status: true,
       code: 200,
       token: token,
-      username: username
+      username: userpname
     });
 
   });
@@ -173,6 +174,33 @@ router.get('/api/v1/getCou/:uid', (req, res, next) => {
   }, {
     cou: 1,
     _id: 0
+  }, (err, result) => {
+    return res.json(result);
+  })
+});
+
+
+router.get('/api/v1/dj/:uid', (req, res, next) => {
+  let id = req.params.uid;
+  User.update({
+    _id: id
+  }, {
+    $set: {
+      status: false
+    }
+  }, (err, result) => {
+    return res.json(result);
+  })
+});
+
+router.get('/api/v1/reset/:uid', (req, res, next) => {
+  let id = req.params.uid;
+  User.update({
+    _id: id
+  }, {
+    $set: {
+      cou: 0
+    }
   }, (err, result) => {
     return res.json(result);
   })

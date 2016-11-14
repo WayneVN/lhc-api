@@ -18,7 +18,7 @@ let colors = require("colors");
 app.use(cors());
 
 module.exports = function (app) {
-  app.use('/', router);
+  app.use('/', cors(), router);
 };
 
 router.get('/', function (req, res, next) {

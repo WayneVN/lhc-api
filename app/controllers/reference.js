@@ -27,3 +27,26 @@ router.get('/api/v1/reference', (req, res, next) => {
     data: result
   }))
 });
+
+
+router.get('/api/v1/re/dj/:uid', (req, res, next) => {
+  let id = req.params.uid;
+  Reference.remove({
+    _id: id
+  }, (err, result) => {
+    return res.json(result);
+  })
+});
+
+router.get('/api/v1/re/reset/:uid', (req, res, next) => {
+  let id = req.params.uid;
+  Reference.update({
+    _id: id
+  }, {
+    $set: {
+      cou: 0
+    }
+  }, (err, result) => {
+    return res.json(result);
+  })
+});

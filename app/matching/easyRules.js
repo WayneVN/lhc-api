@@ -7,8 +7,8 @@ const Bet = mongoose.model('Bet');
 const Maps = require('./maps');
 
 let match = {
-  init(k, v, cb) {
-    this.curNum = [11,13,14,15,16,12,1]; //nums; //当期开奖号码
+  init(k, v, dqqm, cb) {
+    this.curNum = dqqm.map(i => +i); //[11,13,14,15,16,12,1]; //nums; //当期开奖号码
     this.sumPrice = []; // 总金额
     this.uid = k;
 
