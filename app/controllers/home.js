@@ -22,12 +22,14 @@ module.exports = function (app) {
 };
 
 router.get('/', function (req, res, next) {
-  /* let list = [13,15,16,12,25,22,44];*/
-  /* let a  = easyRules.init(list);*/
-  return res.json({
-    status: true,
-    code: 200,
-    msg: 'success',
+  return res.render('index', {
+    title: 'CC System'
+  });
+});
+
+router.get('/admin/page/extension', function (req, res, next) {
+  return res.render('admin', {
+    title: 'CC System'
   });
 });
 
