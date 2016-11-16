@@ -50,7 +50,8 @@ module.exports = function(app, config) {
   app.use(function (req, res, next) {
     var err = new Error('Not Found');
     err.status = 404;
-    next(err);
+    //next(err);
+    return res.redirect('/');
   });
   
   if(app.get('env') === 'development'){
