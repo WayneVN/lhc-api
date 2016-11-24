@@ -157,7 +157,7 @@ router.get('/api/v1/getBet/:uid', (req, res, next) => {
       status: true,
       data: result
     })
-  })
+n  })
 });
 
 router.get('/api/v1/getUserBet/:uid', (req, res, next) => {
