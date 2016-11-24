@@ -4,6 +4,7 @@ var mongoose = require('mongoose'),
 var OpenTimeSchema = new Schema({
   openTime: String,
   closeTime: String,
+  type: String,
 });
 
 OpenTimeSchema.virtual('date')

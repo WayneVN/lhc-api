@@ -38,7 +38,9 @@ router.get('/admin', function (req, res, next) {
 // 开盘时间
 router.post('/api/v1/setOpenTime', function (req, res, next) {
   let obj = new OpenTime(req.body);
-  OpenTime.remove((err, result) =>{
+  OpenTime.remove({
+    type: req.body.type
+  },(err, result) =>{
     if (err) {
       return ;
     }
@@ -61,8 +63,10 @@ router.post('/api/v1/setOpenTime', function (req, res, next) {
 });
 
 
-router.get('/api/v1/getOpenTime', function (req, res, next) {
-  OpenTime.findOne((err, result) => {
+router.get('/api/v1/getOpenTime/:type', function (req, res, next) {
+  OpenTime.findOne({
+    type: req.params.type
+  },(err, result) => {
     return res.json({
       status: 'success',
       code: 200,

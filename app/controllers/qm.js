@@ -23,12 +23,14 @@ router.post('/api/v1/setQm', function (req, res, next) {
     body: {
       qm,
       name,
+      type,
       id
     }
   } = req;
 
   Qm.update({
-    name: name
+    name: name,
+    type: type
   }, {
     $set: {
       qm: qm,
@@ -50,9 +52,11 @@ router.post('/api/v1/setQm', function (req, res, next) {
 });
 
 // 读取当期球码
-router.get('/api/v1/getQm', function (req, res, next) {
+router.get('/api/v1/getQm/:type', function (req, res, next) {
 
-  Qm.findOne({}, {
+  Qm.findOne({
+    type: type
+  }, {
     name: 1,
     qm: 1
   }, {
