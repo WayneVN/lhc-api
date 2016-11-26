@@ -122,12 +122,20 @@ let match = {
     }
   },
 
-  // 全不中
-  qbz(v) {
-    let qm = _.clone(this.curNum);
-    let qms = v.qms.map(i => parseInt(i));
-    _.pullAll(qm, qms);
-    if (qm.length == 7) {
+  lmt(v,r) {
+    let q = v.qm.split('_');
+    let curqm = _.find(this.result.list, {'c_t': +v.qs}).c_r.split(',');
+    _.pullAll(q, curqm);
+    if (q.length == q.length) {
+      this.countPrice(v.xdpl, v.xdjf);
+    }
+  },
+
+  dmt(v) {
+    let q = v.qm.split('_');
+    let curqm = _.find(this.result.list, {'c_t': +v.qs}).c_r.split(',');
+    _.pullAll(q, curqm);
+    if (q.length < 5) {
       this.countPrice(v.xdpl, v.xdjf);
     }
   },

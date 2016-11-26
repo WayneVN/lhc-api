@@ -207,6 +207,10 @@ function findPl(body, next, cb) {
   if (types == 'sxl') {
     qm = `${_.last(body.qm.split('_'))}`;
   }
+  if (types == 'lmt') {
+    qm = `lmt_${qm.length}`;
+  }
+
   Rules.findOne({
     name: qm,
     types: types
