@@ -9,6 +9,7 @@ var BetSchema = new Schema({
     default: Date.now
   },
   types: String,
+  qs: String,
   qm: String, // 球码
   qms: Array,
   reference: String, //推荐人id

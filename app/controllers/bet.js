@@ -11,9 +11,12 @@ const moment = require('moment');
 const Rules = mongoose.model('rules');
 const Qm = mongoose.model('Qm');
 const EasyRules = require('../matching/easyRules');
+const Ssc = require('../matching/ssc');
 const _ = require('lodash');
 let jwt = require('jsonwebtoken');
 const KEYS = 'cocodevn';
+const request = require('superagent');
+const sscData = 'http://www.1680180.com/Open/CurrentOpen?code=10011';
 
 
 app.use(cors());
@@ -40,13 +43,26 @@ router.post('/api/v1/betplay', function(req, res, next) {
         closeDate
       } = result;
       let t = Date.parse(new Date());
-      if (t>closeTime || t< openTime) {
-        return res.json({
-          status: 'error',
-          code: 500,
-          msg: '当前为封盘时间!',
-        });
+      if (body.types == 'dwt') {
+        let a = moment();
+        if (a.hours()>=2 && a.hours()<8) {
+          return res.json({
+            status: 'error',
+            code: 500,
+            msg: '当前为封盘时间!',
+          });
+        }
       }
+      else {
+        if (t>closeTime || t< openTime) {
+          return res.json({
+            status: 'error',
+            code: 500,
+            msg: '当前为封盘时间!',
+          });
+        }
+      }
+
 
       let obj = {
         username: body.username || '测试1',
@@ -227,3 +243,110 @@ function kouqian(id, jf, cb) {
     return cb(err, result);
   });
 }
+
+
+
+
+
+
+router.post('/api/v1/betssc', function(req, res, next) {
+  let {
+    body
+  } = req;
+  let a = moment();
+  if (a.hours()>=2 && a.hours()<8) {
+    return res.json({
+      status: 'error',
+      code: 500,
+      msg: '当前为封盘时间!',
+    });
+  }
+
+  request.get(sscData).end((err, result) => {
+    let r = JSON.parse(result.text);
+    let a = new Date(r.n_d).getTime()/1000;
+    let now = new Date().getTime()/1000;
+    let diff = parseInt(a-now);
+    if (diff <= 90) {
+      return res.json({
+        status: 'error',
+        code: 500,
+        msg: '开奖前90秒不可下单!',
+      })
+    }
+    else {
+      // 查找当前赔率 => 扣除积分 => 下单
+      jz(body,res,next);
+    }
+  });
+
+});
+
+function jz(body, res, next) {
+  findPl(body, next, num => {
+
+    let obj = {
+      username: body.username || '',
+      uid: jwt.verify(body.uid, KEYS),
+      createTime: new Date(),
+      qs: body.qs,
+      types: body.types,
+      qm: body.qm,
+      xdpl: num, //下单时赔率
+      xdjf: body.xdjf, // 下注积分
+    };
+
+    // 扣除积分
+    kouqian(jwt.verify(body.uid, KEYS), body.xdjf, (err, result) => {
+      new Bet(obj).save((err, result) => {
+        if (err) {
+          return next(err);
+        }
+        return res.json({
+          status: 'success',
+          code: 200,
+          msg: '下单成功!',
+        });
+      });
+    });
+
+
+
+  });
+}
+
+//自动结算
+function autoCount() {
+  Bet.find({
+    status: false
+  }, (err, result) => {
+    if (err) {
+      return next(err);
+    }
+    let list = _.groupBy(result, 'uid');
+    Qm.findOne({}, {
+      name: 1,
+      qm: 1
+    }, {
+      sort:{ createTime: -1 }
+    }, (err, result) => {
+      if (err) {
+        return next(err);
+      }
+
+      _.forIn(list, (v, k) => {
+        Ssc.init(k, v, result.qm);
+      });
+
+      /* return res.json({
+       *   list
+       * })*/
+    });
+
+  })
+
+
+}
+setInterval(()=> {
+  autoCount();
+}, 5000 * 3);
