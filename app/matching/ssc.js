@@ -125,35 +125,22 @@ let match = {
   lmt(v,r) {
     let q = v.qm.split('_');
     let curqm = _.find(this.result.list, {'c_t': +v.qs}).c_r.split(',');
-    _.pullAll(q, curqm);
+    _.pullAll(curqm, q );
     if (q.length == q.length) {
       this.countPrice(v.xdpl, v.xdjf);
     }
   },
 
   dmt(v) {
-    let q = v.qm.split('_');
+    let q = v.qm;
     let curqm = _.find(this.result.list, {'c_t': +v.qs}).c_r.split(',');
-    _.pullAll(q, curqm);
+    _.pullAll(curqm, q );
     if (q.length < 5) {
       this.countPrice(v.xdpl, v.xdjf);
     }
   },
 
-  //正码特
-  zmt(v) {
-    let list = _.clone(this.curNum);
-    let data = v.qm.split('');
-    let zmIndex = _.replace(data[0], 'zm', '');
-    let qm = _.replace(data[1], 'qm', '');
-    if (list[zmIndex-1] == qm) {
-      this.countPrice(v.xdpl, v.xdjf);
-    }
-  }
 };
 
-/* module.exports = function (app) {
- *   app.use('/', router);
- * };*/
 
 module.exports = match;

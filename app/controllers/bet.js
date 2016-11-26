@@ -210,6 +210,9 @@ function findPl(body, next, cb) {
   if (types == 'lmt') {
     qm = `lmt_${qm.length}`;
   }
+  if (types == 'dmt') {
+    qm = `dmt_${qm}`;
+  }
 
   Rules.findOne({
     name: qm,
