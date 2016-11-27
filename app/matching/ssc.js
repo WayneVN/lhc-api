@@ -151,8 +151,8 @@ let match = {
 
   lhh(v,r) {
     let q = v.qm.split('_');
-    let sqm  = +curqm[q[1]-1];//当前选中球码
     let curqm = _.find(this.result.list, {'c_t': +v.qs}).c_r.split(',');
+    let sqm  = +curqm[q[1]-1];//当前选中球码
     if (+q[2]==1) {
       if (sqm >= 5) {
         this.countPrice(v.xdpl, v.xdjf);
