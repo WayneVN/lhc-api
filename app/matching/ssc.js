@@ -112,14 +112,32 @@ let match = {
   dwt(v,r) {
     let q = v.qm.split('_');
     let curqm = _.find(this.result.list, {'c_t': +v.qs}).c_r.split(',');
-    if (+q[2]<=9) {
-      if (+curqm[q[1]-1] == +q[2]) {
-        this.countPrice(v.xdpl, v.xdjf);
-      }
+    let sqm  = +curqm[q[1]-1];//当前选中球码
+    /*     if (+q[2]<=9) {*/
+    if (sqm == +q[2]) {
+      this.countPrice(v.xdpl, v.xdjf);
     }
-    if (+q[2]>9) {
-      // some
-    }
+    /*     }*/
+    /* if (+q[2]==10) {
+     *   if (sqm >= 5) {
+     *     this.countPrice(v.xdpl, v.xdjf);
+     *   }
+     * }
+     * if (+q[2]==11) {
+     *   if (sqm < 5) {
+     *     this.countPrice(v.xdpl, v.xdjf);
+     *   }
+     * }
+     * if (+q[2]==12) {
+     *   if (curqm[0] > curqm[4]) {
+     *     this.countPrice(v.xdpl, v.xdjf);
+     *   }
+     * }
+     * if (+q[2]==13) {
+     *   if (curqm[0] < curqm[4]) {
+     *     this.countPrice(v.xdpl, v.xdjf);
+     *   }
+     * }*/
   },
 
   lmt(v,r) {
@@ -128,6 +146,67 @@ let match = {
     _.pullAll(curqm, q );
     if (q.length == q.length) {
       this.countPrice(v.xdpl, v.xdjf);
+    }
+  },
+
+  lhh(v,r) {
+    let q = v.qm.split('_');
+    let sqm  = +curqm[q[1]-1];//当前选中球码
+    let curqm = _.find(this.result.list, {'c_t': +v.qs}).c_r.split(',');
+    if (+q[2]==1) {
+      if (sqm >= 5) {
+        this.countPrice(v.xdpl, v.xdjf);
+      }
+    }
+    if (+q[2]==2) {
+      if (sqm < 5) {
+        this.countPrice(v.xdpl, v.xdjf);
+      }
+    }
+    if (+q[2]==3) {
+      if (sqm%2>0) {
+        this.countPrice(v.xdpl, v.xdjf);
+      }
+    }
+    if (+q[2]==4) {
+      if (sqm%2==0) {
+        this.countPrice(v.xdpl, v.xdjf);
+      }
+    }
+    if (+q[2]==5) {
+      if (curqm[0] > curqm[4]) {
+        this.countPrice(v.xdpl, v.xdjf);
+      }
+    }
+    if (+q[2]==6) {
+      if (curqm[0] < curqm[4]) {
+        this.countPrice(v.xdpl, v.xdjf);
+      }
+    }
+    if (+q[2]==7) {
+      if (curqm[0] == curqm[4]) {
+        this.countPrice(v.xdpl, v.xdjf);
+      }
+    }
+  },
+
+  zhs(v,r) {
+    let q = v.qm;
+    let curqm = _.find(this.result.list, {'c_t': +v.qs}).c_r.split(',');
+    let sums = _.sum(curqm);
+    switch(sums) {
+      case (q==1 && sums>23):
+        this.countPrice(v.xdpl, v.xdjf);
+        break;
+      case (q==2 && sums<23):
+        this.countPrice(v.xdpl, v.xdjf);
+        break;
+      case (q==3 && sums%2>0):
+        this.countPrice(v.xdpl, v.xdjf);
+        break;
+      case (q==4 && sums%2 ==0):
+        this.countPrice(v.xdpl, v.xdjf);
+        break;
     }
   },
 
