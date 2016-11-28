@@ -28,7 +28,7 @@ router.post('/api/v1/signup', (req, res, next) => {
       username,
       pwd,
       role = 'pig',
-      cou,
+      cou = 0,
       fsl = 0,
       reference,
       bz = ''
@@ -56,7 +56,7 @@ router.post('/api/v1/signup', (req, res, next) => {
     function(result, cb) {
       if (result && result._id) {
         return res.json({
-          status: 'error',
+          status: false,
           msg: '账号已注册!'
         });
       }
@@ -70,13 +70,13 @@ router.post('/api/v1/signup', (req, res, next) => {
   ync.waterfall(task, (err, result) => {
     if (err) {
       return res.json({
-        status: 'error',
+        status: false,
         code: 501,
         msg: err
       });
     }
     return res.json({
-      status: 'success',
+      status: true,
       code: 200,
       msg: '账号注册成功!'
     });
@@ -199,9 +199,36 @@ router.get('/api/v1/reset/:uid', (req, res, next) => {
     _id: id
   }, {
     $set: {
-      cou: 0
+      cou: 0,
+      zhuanzhang: false
     }
   }, (err, result) => {
     return res.json(result);
+  })
+});
+
+router.get('/api/v1/updatezz/:uid', (req, res, next) => {
+  let id = jwt.verify(req.params.uid, KEYS);
+  User.update({
+    _id: id
+  }, {
+    $set: {
+      zhuanzhang: true
+    }
+  }, (err, result) => {
+    return res.json({err,result});
+  })
+});
+
+
+router.post('/api/v1/updatecou', (req, res, next) => {
+  User.update({
+    username: req.body.username
+  }, {
+    $inc: {
+      cou: +req.body.cou
+    }
+  }, (err, result) => {
+    return res.json({err,result});
   })
 });

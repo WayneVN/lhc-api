@@ -8,6 +8,11 @@ var UserSchema = new Schema({
     index: true,
     unique: true
   },
+  zhuanzhang: {
+    type: Boolean,
+    default: false
+  },
+  zh: String,
   pwd: {
     type: String,
     trim: true,

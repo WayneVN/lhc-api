@@ -169,11 +169,44 @@ router.get('/api/v1/getBet/:uid', (req, res, next) => {
     if (err) {
       return next(err);
     }
+    var LHH = {
+      1: '大',
+      2: '小',
+      3: '单',
+      4: '双',
+      5: '龙',
+      6: '虎',
+      7: '合'
+    }
+    let a = _.cloneDeep(result);
+    for(let i = 0; i < a.length; i++) {
+      let sp = a[i].qm.split('_');
+      let types = sp[0];
+      if (a[i].types == 'lhh' ) {
+        let str = `第${sp[1]}球(${LHH[sp[2]]})`;
+        a[i].qms = str;
+      }
+      if (a[i].types == 'zhs') {
+        let str = LHH[a[i].qm];
+        a[i].qms = str;
+      }
+      if (a[i].types == 'lmt') {
+        let str = a[i].qm.split('_').join(',');
+        a[i].qms = str;
+      }
+      if (a[i].types == 'dmt') {
+        a[i].qms = qm;
+      }
+      if (a[i].types == 'dwt') {
+        let str = `第${sp[1]}球(${LHH[sp[2]]})`;
+        a[i].qms = str;
+      }
+    }
     return res.json({
       status: true,
-      data: result
+      data: a
     })
-n  })
+  })
 });
 
 router.get('/api/v1/getUserBet/:uid', (req, res, next) => {
@@ -185,9 +218,42 @@ router.get('/api/v1/getUserBet/:uid', (req, res, next) => {
     if (err) {
       return next(err);
     }
+    var LHH = {
+      1: '大',
+      2: '小',
+      3: '单',
+      4: '双',
+      5: '龙',
+      6: '虎',
+      7: '合'
+    }
+    let a = _.cloneDeep(result);
+    for(let i = 0; i < a.length; i++) {
+      let sp = a[i].qm.split('_');
+      let types = sp[0];
+      if (a[i].types == 'lhh' ) {
+        let str = `第${sp[1]}球(${LHH[sp[2]]})`;
+        a[i].qms = str;
+      }
+      if (a[i].types == 'zhs') {
+        let str = LHH[a[i].qm];
+        a[i].qms = str;
+      }
+      if (a[i].types == 'lmt') {
+        let str = a[i].qm.split('_').join(',');
+        a[i].qms = str;
+      }
+      if (a[i].types == 'dmt') {
+        a[i].qms = qm;
+      }
+      if (a[i].types == 'dwt') {
+        let str = `第${sp[1]}球(${LHH[sp[2]]})`;
+        a[i].qms = str;
+      }
+    }
     return res.json({
       status: true,
-      data: result
+      data: a
     })
   })
 });
