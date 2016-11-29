@@ -85,6 +85,26 @@ router.post('/api/v1/signup', (req, res, next) => {
 
 });
 
+router.post('/api/v1/adminlogin', (req, res, next) => {
+  let {
+    body: {
+      username,
+      pwd
+    }
+  } = req;
+
+  if (username == 'username' && pwd == 'haitaimima') {
+    return res.json({
+      status: true,
+      msg: '登录成功！'
+    });
+  }
+  return res.json({
+    status: false,
+    msg: '账号密码错误！'
+  });
+});
+
 router.post('/api/v1/login', (req, res, next) => {
   let {
     body: {

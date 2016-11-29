@@ -4,6 +4,7 @@ const _ = require('lodash');
 const User = mongoose.model('User');
 const Reference = mongoose.model('Reference');
 const Bet = mongoose.model('Bet');
+const Rule = mongoose.model('rules');
 const Maps = require('./maps');
 const request = require('superagent');
 const sscData = 'http://www.1680180.com/Open/CurrentOpen?code=10011';
@@ -12,18 +13,24 @@ let match = {
   init(k, v, dqqm, cb) {
     request.get(sscData).end((err, result) => {
       let r = JSON.parse(result.text);
-      this.initData(k, v, dqqm, r, cb);
+      Rule.find({
+        types: 'dmt'
+      }, (err, result) => {
+        this.initData(k, v, dqqm, r, result,cb);
+      });
     });
   },
 
-  initData(k, v, dqqm, r, cb) {
+  initData(k, v, dqqm, r, db, cb) {
     this.sumPrice = []; // 总金额
     this.uid = k;
     this.result = r;
+    this.dbmap = db;
 
     // 查找对应规则 db中types名称为函数名
     for(let i = 0; i < v.length; i++) {
-      this[v[i].types](v[i]);
+      //this[v[i].types](v[i]);
+      this.dmt(v[i]);
     }
     this.fs(); //先反水再结算
   },
@@ -88,6 +95,10 @@ let match = {
         Reference.findOne({
           _id: id
         }, (err, result) => {
+          if (!result || err) {
+            console.log( '没有代理，不反水!');
+            return ;
+          }
           let a = result.fsl/100;
           Reference.update({
             _id: id
@@ -112,11 +123,12 @@ let match = {
   dwt(v,r) {
     let q = v.qm.split('_');
     let curqm = _.find(this.result.list, {'c_t': +v.qs}).c_r.split(',');
+    curqm = curqm.map((item) => +item);
     let sqm  = +curqm[q[1]-1];//当前选中球码
-    /*     if (+q[2]<=9) {*/
     if (sqm == +q[2]) {
       this.countPrice(v.xdpl, v.xdjf);
     }
+    /*     this.dbmap*/
     /*     }*/
     /* if (+q[2]==10) {
      *   if (sqm >= 5) {
@@ -212,10 +224,20 @@ let match = {
 
   dmt(v) {
     let q = v.qm;
-    let curqm = _.find(this.result.list, {'c_t': +v.qs}).c_r.split(',');
-    _.pullAll(curqm, q );
-    if (q.length < 5) {
-      this.countPrice(v.xdpl, v.xdjf);
+    let curqm = null;
+    if (v.qs) {
+      curqm = _.find(this.result.list, ['c_t' , +v.qs]);
+      if (curqm) {
+        curqm = curqm.c_r.split(',');
+      }
+    }
+    if (curqm) {
+      _.pullAll(curqm, q );
+      if (curqm.length < 5) {
+        let bs = 5-curqm.length;
+        let obj = _.find(this.dbmap, ['name', `dmt_${bs}`]);
+        this.countPrice(obj.num, v.xdjf);
+      }
     }
   },
 

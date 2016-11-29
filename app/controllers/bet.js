@@ -410,10 +410,6 @@ function autoCount() {
       _.forIn(list, (v, k) => {
         Ssc.init(k, v, result.qm);
       });
-
-      /* return res.json({
-       *   list
-       * })*/
     });
 
   })
