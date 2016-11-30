@@ -195,7 +195,7 @@ router.get('/api/v1/getBet/:uid', (req, res, next) => {
         a[i].qms = str;
       }
       if (a[i].types == 'dmt') {
-        a[i].qms = qm;
+        a[i].qms = a[i].qm;
       }
       if (a[i].types == 'dwt') {
         let str = `第${sp[1]}球(${LHH[sp[2]]})`;
