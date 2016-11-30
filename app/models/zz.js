@@ -5,6 +5,7 @@ var Zz = new Schema({
   username: String,
   zh:String,
   time: String,
+  je: String,
   status: {
     type: Boolean,
     default: false

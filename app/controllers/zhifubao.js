@@ -44,6 +44,7 @@ router.post(`${api}savezz`, (req, res, next) => {
   let obj = new Zz({
     username: req.body.username,
     zh: req.body.zh,
+    je: req.body.je,
     time: new Date(),
     status: false
   });

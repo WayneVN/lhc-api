@@ -247,7 +247,7 @@ router.get('/api/v1/getUserBet/:uid', (req, res, next) => {
         a[i].qms = a[i].qm;
       }
       if (a[i].types == 'dwt') {
-        let str = `第${sp[1]}球(${LHH[sp[2]]})`;
+        let str = `第${sp[1]}球(${sp[2]})`;
         a[i].qms = str;
       }
     }
@@ -327,24 +327,24 @@ router.post('/api/v1/betssc', function(req, res, next) {
     body
   } = req;
   let a = moment();
-  if (a.hours()>=2 && a.hours()<8) {
-    return res.json({
-      status: 'error',
-      code: 500,
-      msg: '当前为封盘时间!',
-    });
-  }
+  /* if (a.hours()>=2 && a.hours()<8) {
+   *   return res.json({
+   *     status: 'error',
+   *     code: 500,
+   *     msg: '当前为封盘时间!',
+   *   });
+   * }*/
 
   request.get(sscData).end((err, result) => {
     let r = JSON.parse(result.text);
     let a = new Date(r.n_d).getTime()/1000;
     let now = new Date().getTime()/1000;
     let diff = parseInt(a-now);
-    if (diff <= 90) {
+    if (diff <= 30) {
       return res.json({
         status: 'error',
         code: 500,
-        msg: '开奖前90秒不可下单!',
+        msg: '开奖前30秒不可下单!',
       })
     }
     else {
