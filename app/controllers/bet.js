@@ -247,7 +247,7 @@ router.get('/api/v1/getUserBet/:uid', (req, res, next) => {
         a[i].qms = a[i].qm;
       }
       if (a[i].types == 'dwt') {
-        let str = `第${sp[1]}球(${sp[2]})`;
+        let str = `第${sp[1]}球(${a[i].qm.split('_')[2]})`;
         a[i].qms = str;
       }
     }
