@@ -55,7 +55,11 @@ router.get('/api/v2/getDataSsc', function (req, res, next) {
 function diffRemoteData(cb) {
   /*   lastList*/
   Qsdata.findOne({},{}, (err, result) => {
-    if (!result.lastList.length) {
+    if (!result.lastList ||
+        !result.lastList.length ||
+        err ||
+        !result
+    ) {
       saveRemoteData(() => {
         console.log('入库完成 51', '**************log***************');
       });
