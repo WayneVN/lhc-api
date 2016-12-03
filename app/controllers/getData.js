@@ -55,28 +55,31 @@ router.get('/api/v2/getDataSsc', function (req, res, next) {
 function diffRemoteData(cb) {
   /*   lastList*/
   Qsdata.findOne({},{}, (err, result) => {
-    if (!result.lastList ||
-        !result.lastList.length ||
-        err ||
-        !result
+    if ( !result ||
+         !result.lastList ||
+         !result.lastList.length ||
+         err
     ) {
       saveRemoteData(() => {
         console.log('入库完成 51', '**************log***************');
       });
     }
-    let openTime = result.lastList[1].time_endsale_syndicate_fixed;
-    openTime = m(openTime).format('X');
-    let nowTime = m(new Date()).format('X');
-    if (openTime< nowTime) {
-      console.log('抓数据', '**************log***************');
-      saveRemoteData(() => {
-        console.log('入库完成 60', '**************log***************');
-      });
-    }
     else {
-      console.log('没变化,读取数据库', '**************log***************');
+      let openTime = result.lastList[1].time_endsale_syndicate_fixed;
+      openTime = m(openTime).format('X');
+      let nowTime = m(new Date()).format('X');
+      if (openTime< nowTime) {
+        console.log('抓数据', '**************log***************');
+        saveRemoteData(() => {
+          console.log('入库完成 60', '**************log***************');
+        });
+      }
+      else {
+        console.log('没变化,读取数据库', '**************log***************');
+      }
     }
     return cb(result);
+
   });
 }
 
