@@ -10,6 +10,7 @@ const cors = require('cors');
 const moment = require('moment');
 const Rules = mongoose.model('rules');
 const Qm = mongoose.model('Qm');
+const Qsdata = mongoose.model('qsdata');
 const EasyRules = require('../matching/easyRules');
 const Ssc = require('../matching/ssc');
 const _ = require('lodash');
@@ -335,11 +336,11 @@ router.post('/api/v1/betssc', function(req, res, next) {
    *   });
    * }*/
 
-  request.get(sscData).end((err, result) => {
-    let r = JSON.parse(result.text);
-    let a = new Date(r.n_d).getTime()/1000;
-    let now = new Date().getTime()/1000;
-    let diff = parseInt(a-now);
+  Qsdata.findOne({},{}, (err, result) => {
+    let openTime = result.lastList[1].time_endsale;
+    openTime = moment(openTime).format('X');
+    let nowTime = moment(new Date()).format('X');
+    let diff  = openTime-nowTime;
     if (diff <= 30) {
       return res.json({
         status: 'error',
