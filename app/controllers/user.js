@@ -5,6 +5,7 @@ const router = express.Router();
 const mongoose = require('mongoose');
 const Article = mongoose.model('Article');
 const User = mongoose.model('User');
+const Chongzhi = mongoose.model('Chongzhi');
 const cors = require('cors');
 const ync = require('async');
 let colors = require("colors");
@@ -215,17 +216,33 @@ router.get('/api/v1/dj/:uid', (req, res, next) => {
 
 router.get('/api/v1/reset/:uid', (req, res, next) => {
   let id = req.params.uid;
-  User.update({
+  User.findOne({
     _id: id
-  }, {
-    $set: {
-      cou: 0,
-      zhuanzhang: false
-    }
   }, (err, result) => {
-    return res.json(result);
-  })
+    let obj = new Chongzhi({
+      uname: result.username,
+      price: result.cou,
+      zhanghu: result.zh,
+      createTime: new Date(),
+      type: 2
+    });
+    obj.save((err, result)=>{
+      User.update({
+        _id: id
+      }, {
+        $set: {
+          cou: 0,
+          zhuanzhang: false
+        }
+      }, (err, result) => {
+        return res.json(result);
+      })
+    })
+  });
 });
+
+
+
 
 router.get('/api/v1/updatezz/:uid', (req, res, next) => {
   let id = jwt.verify(req.params.uid, KEYS);
@@ -242,13 +259,31 @@ router.get('/api/v1/updatezz/:uid', (req, res, next) => {
 
 
 router.post('/api/v1/updatecou', (req, res, next) => {
-  User.update({
-    username: req.body.username
-  }, {
-    $inc: {
-      cou: +req.body.cou
-    }
-  }, (err, result) => {
-    return res.json({err,result});
+  let obj = new Chongzhi({
+    uname: req.body.username,
+    price: req.body.cou,
+    zhanghu: req.body.zh || '',
+    createTime: new Date(),
+    type: 1
+  });
+  obj.save((err, result)=>{
+    User.update({
+      username: req.body.username
+    }, {
+      $inc: {
+        cou: +req.body.cou
+      }
+    }, (err, result) => {
+      return res.json({err,result});
+    })
   })
+});
+
+
+router.get('/api/v1/records/:type', (req, res, next) => {
+  Chongzhi.find({
+    type: req.params.type
+  },{},{
+    sort:{ createTime: 1 }
+  }, (err, result) => res.json({result}))
 });
