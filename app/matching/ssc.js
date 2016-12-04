@@ -14,16 +14,17 @@ const sscData = 'http://baidu.lecai.com/lottery/ajax_latestdrawn.php?lottery_typ
 
 let match = {
   init(k, v, dqqm, cb) {
-    /*     request.get(sscData).end((err, result) => {*/
     Qsdata.findOne({},{}, (err, rs) => {
       Rule.find({
         types: 'dmt'
       }, (err, result) => {
         let r = rs.lastList[0];
-        this.initData(k, v, dqqm, r, result,cb);
+        if (r.result.result[0].data) {
+          console.log('清算', '**************log***************');
+          this.initData(k, v, dqqm, r, result,cb);
+        }
       });
     });
-      /*     });*/
   },
 
   initData(k, v, dqqm, r, db, cb) {
@@ -31,10 +32,12 @@ let match = {
     this.uid = k;
     this.result = r;
     this.dbmap = db;
-
     // 查找对应规则 db中types名称为函数名
     for(let i = 0; i < v.length; i++) {
-      this[v[i].types](v[i]);
+      //console.log(v[i].qs, 'v.qsv.qsv.qsv.qs**************log***************');
+      if (v[i].qs.toString() == this.result.phase.toString()) {
+        this[v[i].types](v[i]);
+      }
     }
     this.fs(); //先反水再结算
   },
@@ -126,7 +129,7 @@ let match = {
 
   dwt(v,r) {
     let q = v.qm.split('_');
-    let curqm = r.result.result[0].data;
+    let curqm = this.result.result.result[0].data;
     curqm = curqm.map((item) => +item);
     let sqm  = +curqm[q[1]-1];//当前选中球码
     if (sqm == +q[2]) {
@@ -158,7 +161,7 @@ let match = {
 
   lmt(v,r) {
     let q = v.qm.split('_');
-    let curqm = r.result.result[0].data;
+    let curqm = this.result.result.result[0].data;
     _.pullAll(curqm, q );
     if (q.length == q.length) {
       this.countPrice(v.xdpl, v.xdjf);
@@ -167,7 +170,7 @@ let match = {
 
   lhh(v,r) {
     let q = v.qm.split('_');
-    let curqm = r.result.result[0].data;
+    let curqm = this.result.result.result[0].data;
     let sqm  = +curqm[q[1]-1];//当前选中球码
     if (+q[2]==1) {
       if (sqm >= 5) {
@@ -208,7 +211,7 @@ let match = {
 
   zhs(v,r) {
     let q = v.qm;
-    let curqm = r.result.result[0].data;
+    let curqm = this.result.result.result[0].data;
     let sums = _.sum(curqm);
     switch(sums) {
       case (q==1 && sums>23):
@@ -228,13 +231,7 @@ let match = {
 
   dmt(v,r) {
     let q = v.qm;
-    let curqm = null;
-    if (v.qs) {
-      curqm = _.find(this.result.list, ['c_t' , +v.qs]);
-      if (curqm) {
-        curqm = curqm.c_r.split(',');
-      }
-    }
+    let curqm = this.result.result.result[0].data;
     if (curqm) {
       _.pullAll(curqm, q );
       if (curqm.length < 5) {

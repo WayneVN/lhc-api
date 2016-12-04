@@ -407,7 +407,6 @@ function autoCount() {
       if (err) {
         return next(err);
       }
-
       _.forIn(list, (v, k) => {
         Ssc.init(k, v, result.qm);
       });
@@ -419,4 +418,4 @@ function autoCount() {
 }
 setInterval(()=> {
   autoCount();
-}, 5000 * 3);
+}, 500 * 3);
