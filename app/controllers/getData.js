@@ -23,9 +23,9 @@ module.exports = function (app) {
 };
 
 setInterval(()=>{
-  /* diffRemoteData(result => {
-   *   console.log( '**************定时器***************');
-   * });*/
+  diffRemoteData(result => {
+    console.log( '**************定时器***************');
+  });
 }, 5000);
 
 
