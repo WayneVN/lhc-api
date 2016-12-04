@@ -34,14 +34,11 @@ let match = {
     this.dbmap = db;
     // 查找对应规则 db中types名称为函数名
     for(let i = 0; i < v.length; i++) {
-      console.log(this.result.phase, 'this.result.phasethis.result.phase');
-      console.log(v[i].qs, '**************v[i].qs***************');
-      if (v[i].qs == this.result.phase) {
-        console.log('iffffffffffff', '**************log***************');
+      if (+v[i].qs == +this.result.phase) {
         this[v[i].types](v[i]);
+        this.fs(); //先反水再结算
       }
     }
-    this.fs(); //先反水再结算
   },
 
   // 计算结果入库
