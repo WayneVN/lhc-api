@@ -35,8 +35,9 @@ let match = {
     // 查找对应规则 db中types名称为函数名
     for(let i = 0; i < v.length; i++) {
       //console.log(v[i].qs, 'v.qsv.qsv.qsv.qs**************log***************');
-      console.log(this.result.phase, '**************log***************');
-      if ((v[i].qs.toString() || '.') == (this.result.phase.toString() || '')) {
+      console.log(this.result.phase, 'sxxxxxxxxxxxxxxxxxxx');
+      console.log(v[i].qs, '**************log***************');
+      if ((v[i].qs || '.') == (this.result.phase.toString() || '')) {
         this[v[i].types](v[i]);
       }
     }
