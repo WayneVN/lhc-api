@@ -11,14 +11,15 @@ const Qsdata = mongoose.model('qsdata');
 const sscData = 'http://baidu.lecai.com/lottery/ajax_latestdrawn.php?lottery_type=200';
 //const sscData = 'http://www.1680180.com/Open/CurrentOpen?code=10011';
 
+
 let match = {
   init(k, v, dqqm, cb) {
     /*     request.get(sscData).end((err, result) => {*/
-    Qsdata.findOne({},{}, (err, result) => {
+    Qsdata.findOne({},{}, (err, rs) => {
       Rule.find({
         types: 'dmt'
       }, (err, result) => {
-        let r = result.lastList[0];
+        let r = rs.lastList[0];
         this.initData(k, v, dqqm, r, result,cb);
       });
     });
