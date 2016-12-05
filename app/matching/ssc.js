@@ -15,9 +15,7 @@ const sscData = 'http://baidu.lecai.com/lottery/ajax_latestdrawn.php?lottery_typ
 let match = {
   init(k, v, dqqm, cb) {
     Qsdata.findOne({},{}, (err, rs) => {
-      Rule.find({
-        types: 'dmt'
-      }, (err, result) => {
+      Rule.find({}, (err, result) => {
         let r = rs.lastList[0];
         if (r.result.result[0].data) {
           console.log('清算', '**************log***************');
@@ -34,6 +32,7 @@ let match = {
     this.dbmap = db;
     // 查找对应规则 db中types名称为函数名
     for(let i = 0; i < v.length; i++) {
+      console.log(+v[i].qs, +this.result.phase,'**************log--------------------***************');
       if (+v[i].qs == +this.result.phase) {
         this[v[i].types](v[i]);
       }
