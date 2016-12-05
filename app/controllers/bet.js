@@ -280,7 +280,8 @@ function findPl(body, next, cb) {
   if (types == 'dmt') {
     qm = `dmt_${qm}`;
   }
-
+  console.log(qm,'qmqmqmqmqmqmqmqmqmqmqmqmqmqmqmqmqm');
+  console.log(types, 'sssssssssssss**************log***************');
   Rules.findOne({
     name: qm,
     types: types
