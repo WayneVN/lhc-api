@@ -36,9 +36,9 @@ let match = {
     for(let i = 0; i < v.length; i++) {
       if (+v[i].qs == +this.result.phase) {
         this[v[i].types](v[i]);
-        this.fs(); //先反水再结算
       }
     }
+    this.fs(); //先反水再结算
   },
 
   // 计算结果入库
