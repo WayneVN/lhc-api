@@ -31,13 +31,16 @@ let match = {
     this.result = r;
     this.dbmap = db;
     // 查找对应规则 db中types名称为函数名
+    let is = false;
     for(let i = 0; i < v.length; i++) {
-      console.log(+v[i].qs, +this.result.phase,'**************log--------------------***************');
       if (+v[i].qs == +this.result.phase) {
         this[v[i].types](v[i]);
+        is = true;
       }
     }
-    this.fs(); //先反水再结算
+    if (is) {
+      this.fs(); //先反水再结算
+    }
   },
 
   // 计算结果入库
