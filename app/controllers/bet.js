@@ -286,6 +286,9 @@ function findPl(body, next, cb) {
     if (err) {
       return next(err);
     }
+    if (!result) {
+      return cb(0);
+    }
     return cb(result.num);
   });
 }
