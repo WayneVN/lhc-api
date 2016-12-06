@@ -35,7 +35,6 @@ let match = {
     for(let i = 0; i < v.length; i++) {
       if (+v[i].qs == +this.result.phase) {
         console.log(v[i].types, '**************log***************');
-
         this[v[i].types](v[i]);
         is = true;
       }
@@ -131,39 +130,17 @@ let match = {
   },
 
   dwt(v,r) {
-    let q = v.qm.split('_');
+    let q = v.qm.split('_').map(item => +item);
     let curqm = this.result.result.result[0].data;
     curqm = curqm.map((item) => +item);
     let sqm  = +curqm[q[1]-1];//当前选中球码
     if (sqm == +q[2]) {
       this.countPrice(v.xdpl, v.xdjf);
     }
-    /*     this.dbmap*/
-    /*     }*/
-    /* if (+q[2]==10) {
-     *   if (sqm >= 5) {
-     *     this.countPrice(v.xdpl, v.xdjf);
-     *   }
-     * }
-     * if (+q[2]==11) {
-     *   if (sqm < 5) {
-     *     this.countPrice(v.xdpl, v.xdjf);
-     *   }
-     * }
-     * if (+q[2]==12) {
-     *   if (curqm[0] > curqm[4]) {
-     *     this.countPrice(v.xdpl, v.xdjf);
-     *   }
-     * }
-     * if (+q[2]==13) {
-     *   if (curqm[0] < curqm[4]) {
-     *     this.countPrice(v.xdpl, v.xdjf);
-     *   }
-     * }*/
   },
 
   lmt(v,r) {
-    let q = v.qm.split('_');
+    let q = v.qm.split('_').map(item => +item);
     let curqm = this.result.result.result[0].data.map(item => +item);
     _.pullAll(curqm, q );
     if (q.length == q.length) {
@@ -172,7 +149,7 @@ let match = {
   },
 
   lhh(v,r) {
-    let q = v.qm.split('_');
+    let q = v.qm.split('_').map(item => +item);
     let curqm = this.result.result.result[0].data.map(item => +item);
     let sqm  = +curqm[q[1]-1];//当前选中球码
     if (+q[2]==1) {
@@ -213,7 +190,7 @@ let match = {
   },
 
   zhs(v,r) {
-    let q = v.qm;
+    let q = +v.qm;
     let curqm = this.result.result.result[0].data.map(item => +item);
     let sums = _.sum(curqm);
     switch(sums) {
@@ -233,7 +210,7 @@ let match = {
   },
 
   dmt(v,r) {
-    let q = v.qm;
+    let q = +v.qm;
     let curqm = this.result.result.result[0].data;
     if (curqm) {
       _.pullAll(curqm, q );
