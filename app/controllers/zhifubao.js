@@ -46,13 +46,14 @@ router.post(`${api}savezz`, (req, res, next) => {
     zh: req.body.zh,
     je: req.body.je,
     time: new Date(),
+    type: req.body.type,
     status: false
   });
   User.update({
     username: req.body.username
   },{
     $set: {
-      zh: req.body.zh
+      zh: req.body.zh,
     }
   }, (err, result) => {
     console.log(result, '充值***');

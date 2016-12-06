@@ -34,6 +34,8 @@ let match = {
     let is = false;
     for(let i = 0; i < v.length; i++) {
       if (+v[i].qs == +this.result.phase) {
+        console.log(v[i].types, '**************log***************');
+
         this[v[i].types](v[i]);
         is = true;
       }
@@ -162,7 +164,7 @@ let match = {
 
   lmt(v,r) {
     let q = v.qm.split('_');
-    let curqm = this.result.result.result[0].data;
+    let curqm = this.result.result.result[0].data.map(item => +item);
     _.pullAll(curqm, q );
     if (q.length == q.length) {
       this.countPrice(v.xdpl, v.xdjf);
@@ -171,7 +173,7 @@ let match = {
 
   lhh(v,r) {
     let q = v.qm.split('_');
-    let curqm = this.result.result.result[0].data;
+    let curqm = this.result.result.result[0].data.map(item => +item);
     let sqm  = +curqm[q[1]-1];//当前选中球码
     if (+q[2]==1) {
       if (sqm >= 5) {
@@ -212,7 +214,7 @@ let match = {
 
   zhs(v,r) {
     let q = v.qm;
-    let curqm = this.result.result.result[0].data;
+    let curqm = this.result.result.result[0].data.map(item => +item);
     let sums = _.sum(curqm);
     switch(sums) {
       case (q==1 && sums>23):

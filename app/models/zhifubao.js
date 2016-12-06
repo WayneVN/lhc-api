@@ -5,7 +5,8 @@ var Zhifu = new Schema({
   zfb:String,
   wechart:String,
   yhk:String,
-  je: String
+  je: String,
+  type: Number
 });
 
 
