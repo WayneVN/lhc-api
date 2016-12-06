@@ -63,7 +63,23 @@ router.post(`${api}savezz`, (req, res, next) => {
 });
 
 router.get(`${api}czsq`, (req, res, next) => {
-  Zz.find({},{},{
+  Zz.find({
+  },{},{
+    sort:{ status: 1 }
+  }, (err, result) => {
+    return res.json({
+      result: result,
+      err: err
+    })
+  });
+});
+
+//提现记录
+router.get(`${api}txjl`, (req, res, next) => {
+  Zz.find({
+    type: 2,
+    status: true,
+  },{},{
     sort:{ status: 1 }
   }, (err, result) => {
     return res.json({

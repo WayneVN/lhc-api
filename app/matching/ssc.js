@@ -33,7 +33,7 @@ let match = {
     // 查找对应规则 db中types名称为函数名
     let is = false;
     for(let i = 0; i < v.length; i++) {
-      if (+v[i].qs == +this.result.phase) {
+      if (+v[i].qs != +this.result.phase) {
         console.log(v[i].types, '**************log***************');
         this[v[i].types](v[i]);
         is = true;
@@ -46,7 +46,10 @@ let match = {
 
   // 计算结果入库
   setDb() {
+    console.log(this.sumPrice, '  数组             **************log***************');
     let sums = _.sum(this.sumPrice);
+    console.log(sums, '  总数   **************log***************');
+    console.log(this.uid, ' id             **************log***************');
     User.update({
       _id: this.uid
     }, {
@@ -54,6 +57,7 @@ let match = {
         cou: sums
       }
     }, (err, result) => {
+      console.log(err, result, '结果');
       if (!err) {
         this.updateStatus();
       }
@@ -87,7 +91,7 @@ let match = {
         _id: this.uid
       }, (err, result) => {
         let a = result.fsl;
-        this.sumPrice.push(sums*(a/100));
+        //this.sumPrice.push(sums*(a/100));
         this.setDb();
         this.vpn(sums);
       })
@@ -192,20 +196,19 @@ let match = {
   zhs(v,r) {
     let q = +v.qm;
     let curqm = this.result.result.result[0].data.map(item => +item);
+    curqm = [1,2,3,4,5];
     let sums = _.sum(curqm);
-    switch(sums) {
-      case (q==1 && sums>23):
-        this.countPrice(v.xdpl, v.xdjf);
-        break;
-      case (q==2 && sums<23):
-        this.countPrice(v.xdpl, v.xdjf);
-        break;
-      case (q==3 && sums%2>0):
-        this.countPrice(v.xdpl, v.xdjf);
-        break;
-      case (q==4 && sums%2 ==0):
-        this.countPrice(v.xdpl, v.xdjf);
-        break;
+    if (q==1 && sums>23) {
+      this.countPrice(v.xdpl, v.xdjf);
+    }
+    if (q==2 && sums<23) {
+      this.countPrice(v.xdpl, v.xdjf);
+    }
+    if  (q==3 && sums%2>0) {
+      this.countPrice(v.xdpl, v.xdjf);
+    }
+    if (q==4 && sums%2 ==0) {
+      this.countPrice(v.xdpl, v.xdjf);
     }
   },
 
@@ -223,6 +226,7 @@ let match = {
   },
 
 };
+
 
 
 module.exports = match;
