@@ -34,7 +34,7 @@ let match = {
     let is = false;
     for(let i = 0; i < v.length; i++) {
       if (+v[i].qs == +this.result.phase) {
-        console.log(v[i].types, '**************log***************');
+        console.log(v[i].types, '类型+++++++++++++++++++++');
         this[v[i].types](v[i]);
         is = true;
       }
@@ -146,9 +146,16 @@ let match = {
   lmt(v,r) {
     let q = v.qm.split('_').map(item => +item);
     let curqm = this.result.result.result[0].data.map(item => +item);
-    _.pullAll(curqm, q );
-    if (q.length == q.length) {
-      this.countPrice(v.xdpl, v.xdjf);
+    curqm = _.union(curqm);
+    let len = curqm.length;
+
+    if (curqm.length >= q.length) {
+      let pull = _.pullAll(curqm, q );
+      let pj = len - pull.length; //派奖赔率
+      if (pj == q.length) {
+        let a = _.find(this.dbmap, ['name', `lmt_${pj}`]);
+        this.countPrice(a.num, v.xdjf);
+      }
     }
   },
 
@@ -196,7 +203,6 @@ let match = {
   zhs(v,r) {
     let q = +v.qm;
     let curqm = this.result.result.result[0].data.map(item => +item);
-    curqm = [1,2,3,4,5];
     let sums = _.sum(curqm);
     if (q==1 && sums>23) {
       this.countPrice(v.xdpl, v.xdjf);
