@@ -340,17 +340,17 @@ router.post('/api/v1/betssc', function(req, res, next) {
     openTime = moment(openTime).format('X');
     let nowTime = moment(new Date()).format('X');
     let diff  = openTime-nowTime;
-    /* if (diff <= 30) {
-     *   return res.json({
-     *     status: 'error',
-     *     code: 500,
-     *     msg: '开奖前30秒不可下单!',
-     *   })
-     * }
-     * else {*/
+    if (diff <= 30) {
+      return res.json({
+        status: 'error',
+        code: 500,
+        msg: '开奖前30秒不可下单!',
+      })
+    }
+    else {
       // 查找当前赔率 => 扣除积分 => 下单
       jz(body,res,next);
-    /*     }*/
+    }
   });
 
 });
