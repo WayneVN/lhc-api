@@ -33,7 +33,7 @@ let match = {
     // 查找对应规则 db中types名称为函数名
     let is = false;
     for(let i = 0; i < v.length; i++) {
-      if (+v[i].qs != +this.result.phase) {
+      if (+v[i].qs == +this.result.phase) {
         console.log(v[i].types, '**************log***************');
         this[v[i].types](v[i]);
         is = true;
