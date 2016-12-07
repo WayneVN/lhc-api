@@ -275,7 +275,7 @@ function findPl(body, next, cb) {
     qm = `${_.last(body.qm.split('_'))}`;
   }
   if (types == 'lmt') {
-    qm = `lmt_${qm.length}`;
+    qm = `lmt_${qm.split('_').length}`;
   }
   Rules.findOne({
     name: qm,
@@ -327,30 +327,30 @@ router.post('/api/v1/betssc', function(req, res, next) {
     body
   } = req;
   let a = moment();
-  /* if (a.hours()>=2 && a.hours()<8) {
-   *   return res.json({
-   *     status: 'error',
-   *     code: 500,
-   *     msg: '当前为封盘时间!',
-   *   });
-   * }*/
+  if (a.hours()>=2 && a.hours()<8) {
+    return res.json({
+      status: 'error',
+      code: 500,
+      msg: '当前为封盘时间!',
+    });
+  }
 
   Qsdata.findOne({},{}, (err, result) => {
     let openTime = result.lastList[1].time_endsale;
     openTime = moment(openTime).format('X');
     let nowTime = moment(new Date()).format('X');
     let diff  = openTime-nowTime;
-    if (diff <= 30) {
-      return res.json({
-        status: 'error',
-        code: 500,
-        msg: '开奖前30秒不可下单!',
-      })
-    }
-    else {
+    /* if (diff <= 30) {
+     *   return res.json({
+     *     status: 'error',
+     *     code: 500,
+     *     msg: '开奖前30秒不可下单!',
+     *   })
+     * }
+     * else {*/
       // 查找当前赔率 => 扣除积分 => 下单
       jz(body,res,next);
-    }
+    /*     }*/
   });
 
 });

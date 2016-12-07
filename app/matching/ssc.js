@@ -33,7 +33,7 @@ let match = {
     // 查找对应规则 db中types名称为函数名
     let is = false;
     for(let i = 0; i < v.length; i++) {
-      if (+v[i].qs == +this.result.phase) {
+      if (+v[i].qs != +this.result.phase) {
         console.log(v[i].types, '类型+++++++++++++++++++++');
         this[v[i].types](v[i]);
         is = true;
@@ -222,7 +222,7 @@ let match = {
     let q = +v.qm;
     let curqm = this.result.result.result[0].data.map(item => +item);
     if (curqm) {
-      _.pullAll(curqm, q );
+      let re  = _.pull(curqm, q );
       if (curqm.length < 5) {
         let bs = 5-curqm.length;
         let obj = _.find(this.dbmap, ['name', `dmt_${bs}`]);
