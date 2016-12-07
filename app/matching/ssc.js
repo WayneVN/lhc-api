@@ -220,7 +220,7 @@ let match = {
 
   dmt(v,r) {
     let q = +v.qm;
-    let curqm = this.result.result.result[0].data;
+    let curqm = this.result.result.result[0].data.map(item => +item);
     if (curqm) {
       _.pullAll(curqm, q );
       if (curqm.length < 5) {
