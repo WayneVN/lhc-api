@@ -34,7 +34,6 @@ let match = {
     let is = false;
     for(let i = 0; i < v.length; i++) {
       if (+v[i].qs == +this.result.phase) {
-        console.log(v[i].types, '类型+++++++++++++++++++++');
         this[v[i].types](v[i]);
         is = true;
       }
@@ -46,10 +45,7 @@ let match = {
 
   // 计算结果入库
   setDb() {
-    console.log(this.sumPrice, '  数组             **************log***************');
     let sums = _.sum(this.sumPrice);
-    console.log(sums, '  总数   **************log***************');
-    console.log(this.uid, ' id             **************log***************');
     User.update({
       _id: this.uid
     }, {
@@ -57,7 +53,6 @@ let match = {
         cou: sums
       }
     }, (err, result) => {
-      console.log(err, result, '结果');
       if (!err) {
         this.updateStatus();
       }
@@ -91,7 +86,6 @@ let match = {
         _id: this.uid
       }, (err, result) => {
         let a = result.fsl;
-        //this.sumPrice.push(sums*(a/100));
         this.setDb();
         this.vpn(sums);
       })
@@ -128,8 +122,18 @@ let match = {
   },
 
   // 计算应得积分
-  countPrice(pl, jf) {
+  countPrice(v, pl, jf) {
     let sum = pl * jf;
+    Bet.update({
+      _id: v._id
+    }, {
+      $set: {
+        js: sum
+      }
+    }, (err, result) => {
+      console.log(v, result, '更改订单结算金额');
+    });
+    // 单独每个订单结算
     this.sumPrice.push(sum);
   },
 
@@ -139,7 +143,7 @@ let match = {
     curqm = curqm.map((item) => +item);
     let sqm  = +curqm[q[1]-1];//当前选中球码
     if (sqm == +q[2]) {
-      this.countPrice(v.xdpl, v.xdjf);
+      this.countPrice(v, v.xdpl, v.xdjf);
     }
   },
 
@@ -154,7 +158,7 @@ let match = {
       let pj = len - pull.length; //派奖赔率
       if (pj == q.length) {
         let a = _.find(this.dbmap, ['name', `lmt_${pj}`]);
-        this.countPrice(a.num, v.xdjf);
+        this.countPrice(v, a.num, v.xdjf);
       }
     }
   },
@@ -165,37 +169,37 @@ let match = {
     let sqm  = +curqm[q[1]-1];//当前选中球码
     if (+q[2]==1) {
       if (sqm >= 5) {
-        this.countPrice(v.xdpl, v.xdjf);
+        this.countPrice(v, v.xdpl, v.xdjf);
       }
     }
     if (+q[2]==2) {
       if (sqm < 5) {
-        this.countPrice(v.xdpl, v.xdjf);
+        this.countPrice(v, v.xdpl, v.xdjf);
       }
     }
     if (+q[2]==3) {
       if (sqm%2>0) {
-        this.countPrice(v.xdpl, v.xdjf);
+        this.countPrice(v, v.xdpl, v.xdjf);
       }
     }
     if (+q[2]==4) {
       if (sqm%2==0) {
-        this.countPrice(v.xdpl, v.xdjf);
+        this.countPrice(v, v.xdpl, v.xdjf);
       }
     }
     if (+q[2]==5) {
       if (curqm[0] > curqm[4]) {
-        this.countPrice(v.xdpl, v.xdjf);
+        this.countPrice(v, v.xdpl, v.xdjf);
       }
     }
     if (+q[2]==6) {
       if (curqm[0] < curqm[4]) {
-        this.countPrice(v.xdpl, v.xdjf);
+        this.countPrice(v, v.xdpl, v.xdjf);
       }
     }
     if (+q[2]==7) {
       if (curqm[0] == curqm[4]) {
-        this.countPrice(v.xdpl, v.xdjf);
+        this.countPrice(v, v.xdpl, v.xdjf);
       }
     }
   },
@@ -205,20 +209,21 @@ let match = {
     let curqm = this.result.result.result[0].data.map(item => +item);
     let sums = _.sum(curqm);
     if (q==1 && sums>23) {
-      this.countPrice(v.xdpl, v.xdjf);
+      this.countPrice(v, v.xdpl, v.xdjf);
     }
     if (q==2 && sums<23) {
-      this.countPrice(v.xdpl, v.xdjf);
+      this.countPrice(v, v.xdpl, v.xdjf);
     }
     if  (q==3 && sums%2>0) {
-      this.countPrice(v.xdpl, v.xdjf);
+      this.countPrice(v, v.xdpl, v.xdjf);
     }
     if (q==4 && sums%2 ==0) {
-      this.countPrice(v.xdpl, v.xdjf);
+      this.countPrice(v, v.xdpl, v.xdjf);
     }
   },
 
   dmt(v,r) {
+    console.log(v,'+++++++++++++++');
     let q = +v.qm;
     let curqm = this.result.result.result[0].data.map(item => +item);
     if (curqm) {
@@ -226,7 +231,7 @@ let match = {
       if (curqm.length < 5) {
         let bs = 5-curqm.length;
         let obj = _.find(this.dbmap, ['name', `dmt_${bs}`]);
-        this.countPrice(obj.num, v.xdjf);
+        this.countPrice(v, obj.num, v.xdjf);
       }
     }
   },

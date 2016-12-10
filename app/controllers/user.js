@@ -263,7 +263,7 @@ router.post('/api/v1/updatecou', (req, res, next) => {
     uname: req.body.username,
     price: req.body.cou,
     zhanghu: req.body.zh || '',
-    createTime: new Date(),
+    //createTime: new Date(),
     type: 1
   });
   obj.save((err, result)=>{
@@ -280,10 +280,35 @@ router.post('/api/v1/updatecou', (req, res, next) => {
 });
 
 
-router.get('/api/v1/records/:type', (req, res, next) => {
-  Chongzhi.find({
-    type: req.params.type
-  },{},{
-    sort:{ createTime: 1 }
+router.get('/api/v1/records', (req, res, next) => {
+  Chongzhi.find({},{},{
+    sort:{ createTime: -1 }
   }, (err, result) => res.json({result}))
+});
+
+router.post('/api/v1/records', (req, res, next) => {
+  let {
+    body: {
+      begTime,
+      endTime,
+      username = ''
+    }
+  } = req;
+  let begT = begTime? new Date(begTime) : new Date('2001-01-01');
+  let endT = endTime? new Date(endTime) : new Date('2020-11-11');
+
+  Chongzhi.find({
+    createTime: {
+      $gte: begT,
+      $lte: endT
+    },
+    uname: {
+      $regex: username
+    }
+  },{},{
+    sort:{ createTime: -1 }
+  }, (err, result) => {
+    console.log(err);
+    return res.json({result})
+  });
 });

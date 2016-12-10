@@ -10,6 +10,10 @@ var BetSchema = new Schema({
   },
   types: String,
   qs: String,
+  js: {
+    type: Number,
+    default: 0
+  }, // 该订单结算金额
   qm: String, // 球码
   qms: Array,
   reference: String, //推荐人id

@@ -2,7 +2,10 @@ var mongoose = require('mongoose'),
   Schema = mongoose.Schema;
 
 var ChongzhiSchema = new Schema({
-  createTime: String,
+  createTime: {
+    type: Date,
+    default: Date.now
+  },
   uname: String,
   price: String,
   zhanghu: String,
