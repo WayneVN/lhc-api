@@ -4,6 +4,7 @@ const app = express();
 const router = express.Router();
 const mongoose = require('mongoose');
 const Article = mongoose.model('Article');
+const Reference = mongoose.model('Reference');
 const User = mongoose.model('User');
 const Chongzhi = mongoose.model('Chongzhi');
 const cors = require('cors');
@@ -216,7 +217,7 @@ router.get('/api/v1/dj/:uid', (req, res, next) => {
 
 router.get('/api/v1/reset/:uid', (req, res, next) => {
   let id = req.params.uid;
-  User.findOne({
+  Reference.findOne({
     _id: id
   }, (err, result) => {
     let obj = new Chongzhi({
@@ -227,12 +228,12 @@ router.get('/api/v1/reset/:uid', (req, res, next) => {
       type: 2
     });
     obj.save((err, result)=>{
-      User.update({
+      Reference.update({
         _id: id
       }, {
         $set: {
           cou: 0,
-          zhuanzhang: false
+          //zhuanzhang: false
         }
       }, (err, result) => {
         return res.json(result);

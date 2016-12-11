@@ -11,7 +11,7 @@ const _ = require('lodash');
 let jwt = require('jsonwebtoken');
 const KEYS = 'cocodevn';
 const request = require('superagent');
-mongoose.set('debug', true);
+//mongoose.set('debug', true);
 
 
 
