@@ -397,19 +397,19 @@ function autoCount() {
       return next(err);
     }
     let list = _.groupBy(result, 'uid');
-    Qm.findOne({}, {
-      name: 1,
-      qm: 1
-    }, {
-      sort:{ createTime: -1 }
-    }, (err, result) => {
-      if (err) {
-        return next(err);
-      }
+    /* Qm.findOne({}, {
+     *   name: 1,
+     *   qm: 1
+     * }, {
+     *   sort:{ createTime: -1 }
+     * }, (err, result) => {
+     *   if (err) {
+     *     return next(err);
+     *   }*/
       _.forIn(list, (v, k) => {
-        Ssc.init(k, v, result.qm);
+        Ssc.init(k, v);
       });
-    });
+    //});
 
   })
 

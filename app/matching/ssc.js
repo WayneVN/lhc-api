@@ -13,19 +13,19 @@ const sscData = 'http://baidu.lecai.com/lottery/ajax_latestdrawn.php?lottery_typ
 
 
 let match = {
-  init(k, v, dqqm, cb) {
+  init(k, v, cb) {
     Qsdata.findOne({},{}, (err, rs) => {
       Rule.find({}, (err, result) => {
         let r = rs.lastList[0];
         if (r.result.result[0].data) {
           console.log('清算', '**************log***************');
-          this.initData(k, v, dqqm, r, result,cb);
+          this.initData(k, v, r, result,cb);
         }
       });
     });
   },
 
-  initData(k, v, dqqm, r, db, cb) {
+  initData(k, v, r, db, cb) {
     this.sumPrice = []; // 总金额
     this.uid = k;
     this.result = r;
