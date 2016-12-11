@@ -119,7 +119,7 @@ router.post('/api/v1/login', (req, res, next) => {
   };
   obj.status = true;
 
-p  if (!username || !pwd) {
+  if (!username || !pwd) {
     return res.json({
       status: false,
       msg: '账号密码不可为空！'
