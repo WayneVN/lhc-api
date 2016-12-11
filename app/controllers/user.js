@@ -94,8 +94,7 @@ router.post('/api/v1/adminlogin', (req, res, next) => {
       pwd
     }
   } = req;
-
-  if (username == 'username' && pwd == 'haitaimima') {
+  if (username == 'admin' && pwd == 'qq448125656') {
     return res.json({
       status: true,
       msg: '登录成功！'
@@ -120,7 +119,7 @@ router.post('/api/v1/login', (req, res, next) => {
   };
   obj.status = true;
 
-  if (!username || !pwd) {
+p  if (!username || !pwd) {
     return res.json({
       status: false,
       msg: '账号密码不可为空！'
