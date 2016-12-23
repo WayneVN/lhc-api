@@ -88,7 +88,7 @@ let match = {
         let a = result.fsl;
         this.setDb();
         this.vpn(sums);
-      })
+      });
     });
   },
 
@@ -124,17 +124,24 @@ let match = {
   // 计算应得积分
   countPrice(v, pl, jf) {
     let sum = pl * jf;
-    Bet.update({
-      _id: v._id
-    }, {
-      $set: {
-        js: sum
-      }
+    User.findOne({
+      _id: this.uid
     }, (err, result) => {
-      console.log(v, result, '更改订单结算金额');
-    });
-    // 单独每个订单结算
-    this.sumPrice.push(sum);
+      if (sum > 0) {
+        sum = sum -(sum * result.fsl);
+      }
+      Bet.update({
+        _id: v._id
+      }, {
+        $set: {
+          js: sum
+        }
+      }, (err, result) => {
+        console.log(v, result, '更改订单结算金额');
+      });
+      // 单独每个订单结算
+      this.sumPrice.push(sum);
+    })
   },
 
   dwt(v,r) {
