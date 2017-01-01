@@ -63,3 +63,53 @@ router.post('/api/v1/tjfind', (req, res, next) => {
     return res.json({result})
   });
 });
+
+
+router.post('/api/v1/removeOrder', (req, res, next) => {
+  let {
+    body: {
+      id
+    }
+  } = req;
+
+  Bet.findOne({
+    _id: id
+  }, (err, result) => {
+    console.log(err, result);
+    if (err) {
+      return res.json({
+        status: false,
+        msg: '撤销失败'
+      });
+    }
+    if (result.status) {
+      return res.json({
+        status: false,
+        msg: '该订单已结算，无法撤销!'
+      });
+    }
+    Bet.remove({_id: id}, (e, r) =>{
+      User.update({
+        _id: result.uid
+      },{
+        $set: {
+          $inc: {
+            cou: result.xdjf
+          }
+        }
+      }, (error, resu) => {
+        if (error) {
+          return res.json({
+            status: false,
+            msg: '撤销失败'
+          });
+        }
+        return res.json({
+          status: true,
+          msg: '撤销成功'
+        });
+      })
+
+    })
+  });
+});
