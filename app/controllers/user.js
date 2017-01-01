@@ -1,9 +1,12 @@
 const express = require('express');
 const cookie = require('cookie');
 const app = express();
+const fs = require('fs');
+const formidable = require('formidable');
 const router = express.Router();
 const mongoose = require('mongoose');
 const Article = mongoose.model('Article');
+const Publics = mongoose.model('Publics');
 const Reference = mongoose.model('Reference');
 const User = mongoose.model('User');
 const Chongzhi = mongoose.model('Chongzhi');
@@ -13,6 +16,8 @@ let colors = require("colors");
 let jwt = require('jsonwebtoken');
 let _ = require('lodash');
 const KEYS = 'cocodevn';
+let path = require('path');
+const rootPath = path.normalize(__dirname + '/..');
 const COOKIECONFIG =  {
   maxAge: 900000,
   httpOnly: true
@@ -311,4 +316,121 @@ router.post('/api/v1/records', (req, res, next) => {
     console.log(err);
     return res.json({result})
   });
+});
+
+// 修改密码
+router.post('/api/v1/updatepwd', (req, res, next) => {
+  let id = jwt.verify(req.body.token, KEYS);
+  if (req.body.newpwd == req.body.newpwds) {
+    User.update({
+      _id: id,
+      pwd: req.body.oldpwd
+    }, {
+      pwd: req.body.newpwd
+    }, (err, result) => {
+      if (err) {
+        return res.json({
+          status: false,
+          msg: '原密码错误,修改失败!'
+        })
+      }
+      return res.json({
+        status: true,
+        msg: '修改成功'
+      })
+    })
+  }
+  else {
+    return res.json({
+      status: false,
+      msg: '两次密码不同!'
+    })
+  }
+});
+
+
+router.post('/api/v1/upload', (req, res, next) => {
+  let uri = `${ rootPath }/../public/img`;
+  console.log(uri);
+  var form = new formidable.IncomingForm(),
+      files = [],
+      fields = [];
+
+  form.type = 'png,jpeg,jpg';
+  form.maxFieldsSize = 3 * 1024 * 1024;
+  form.encoding = 'utf-8';
+  form.keepExtensions = false;
+  form.maxFields = 1000;
+  form.uploadDir = uri;
+
+  form
+    .on('field', (field, value) => {
+      fields.push([field, value]);
+    })
+    .on('file', (field, file) => {
+      files.push([field, file]);
+    })
+    .on('end', () => {
+
+      let id = jwt.verify(fields[0][1], KEYS);
+      User.update({
+        _id: id
+      }, {
+        $set: {
+          ercodeUri: files[0][1].path.split('/')[files[0][1].path.split('/').length-1]
+        }
+      }, (err, result) => {
+        if (err) {
+          return res.json({
+            status: false,
+            msg: '修改失败'
+          });
+        }
+        User.findOne({
+          _id: id
+        },{
+        }, (err, result) => {
+          return res.json({
+            status: true,
+            msg: '修改成功',
+            path: result.ercodeUri
+          })
+        })
+
+      })
+
+    });
+  form.parse(req, function(err, fields, files) {
+
+  });
+
+});
+
+
+router.post('/api/v1/addPublics', (req, res, next) => {
+  Publics.update({
+  },{
+    $set: {
+      content: req.body.publics
+    }
+  },{
+    upsert: true,
+  }, (err, result) => {
+    return res.json({
+      status: true
+    })
+  })
+});
+
+
+router.get('/api/v1/getPublics', (req, res, next) => {
+  Publics.findOne({
+  },{
+  }, (err, result) => {
+    console.log(result);
+    return res.json({
+      status: true,
+      data: result.content
+    })
+  })
 });

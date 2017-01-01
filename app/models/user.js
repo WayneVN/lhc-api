@@ -13,6 +13,7 @@ var UserSchema = new Schema({
     default: false
   },
   zh: String,
+  ercodeUri: String,
   pwd: {
     type: String,
     trim: true,

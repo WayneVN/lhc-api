@@ -6,6 +6,7 @@ var Zz = new Schema({
   zh:String,
   time: String,
   je: String,
+  types: Number,
   type: Number,
   status: {
     type: Boolean,

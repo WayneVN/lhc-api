@@ -33,6 +33,8 @@ router.post('/api/v1/betplay', function(req, res, next) {
     body
   } = req;
 
+
+
   // 查找当前赔率 => 扣除积分 => 下单
   findPl(body, next, num => {
 
@@ -327,6 +329,13 @@ router.post('/api/v1/betssc', function(req, res, next) {
     body
   } = req;
   let a = moment();
+  if (req.body.xdjf >= 10000) {
+    return res.json({
+      status: 'error',
+      code: 500,
+      msg: '下单失败，投注上限不可超过10000',
+    });
+  }
   if (a.hours()>=2 && a.hours()<8) {
     return res.json({
       status: 'error',

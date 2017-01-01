@@ -43,6 +43,7 @@ router.get(`${api}zfb`, (req, res, next) => {
 router.post(`${api}savezz`, (req, res, next) => {
   let obj = new Zz({
     username: req.body.username,
+    types: req.body.types,
     zh: req.body.zh,
     je: req.body.je,
     time: new Date(),

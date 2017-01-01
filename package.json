@@ -22,6 +22,7 @@
     "express": "^4.13.3",
     "express-jwt": "^5.1.0",
     "express-session": "^1.14.2",
+    "formidable": "^1.0.17",
     "glob": "^6.0.4",
     "jsonwebtoken": "^7.1.9",
     "later": "^1.2.0",
