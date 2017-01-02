@@ -123,7 +123,7 @@ function createWechartUser(data, cb) {
 
 
 
-function getuser(data) {
+function getuser(data,cb) {
   let o = new User({
     username: md5(data.openid, 'codevn'),
     pwd: md5(`${data.openid}codevn`, 'codevn'),
