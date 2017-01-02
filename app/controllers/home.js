@@ -106,7 +106,9 @@ function createWechartUser(data, cb) {
       return cb(r);
     }
     else {
+
       const u = `https://api.weixin.qq.com/sns/auth?access_token=${data.access_token}&openid=${data.openid}`;
+      console.log(u);
       request(u, (a,b,c) => {
         console.log(c,'ffffffffffffffffffffffffffffffffffffffffffffffffffff');
         getuser(data, r =>{
