@@ -99,6 +99,29 @@ router.post('/api/v1/accessToken', function (req, res, next) {
 
 
 function createWechartUser(data, cb) {
+  User.findOne({
+    username: md5(data.openid, 'codevn')
+  }, (e, r) => {
+    if (!data && data._id) {
+      return cb(r);
+    }
+    else {
+      const u = `https://api.weixin.qq.com/sns/auth?access_token=${data.access_token}&openid=${data.openid}`;
+      request(u, (a,b,c) => {
+        console.log(c,'ffffffffffffffffffffffffffffffffffffffffffffffffffff');
+        getuser(data, r =>{
+          return cb(r);
+        });
+      })
+
+    }
+  })
+
+}
+
+
+
+function getuser(data) {
   let o = new User({
     username: md5(data.openid, 'codevn'),
     pwd: md5(`${data.openid}codevn`, 'codevn'),
@@ -107,34 +130,20 @@ function createWechartUser(data, cb) {
     fsl: 0,
     bz: '微信用户'
   });
-  User.findOne({
-    username: md5(data.openid, 'codevn')
-  }, (e, r) => {
-    if (!data && data._id) {
-      return cb(r);
-    }
-    else {
-      console.log(data,'###############################');
-      request('http://api.weixin.qq.com/sns/userinfo?access_token=${data.access_token}&openid=${data.openid}&lang=zh_CN',(a,b,c) =>{
-        console.log(c,'@@@@@@@@@@@2');
-        o.save((err, result) =>{
-          if (err) {
-            return cb();
-          }
-          User.findOne({
-            username: md5(data.openid, 'codevn')
-          }, (e, r) => {
-            return cb(r);
-          })
-        });
-      });
-    }
-  })
-
+  request('http://api.weixin.qq.com/sns/userinfo?access_token=${data.access_token}&openid=${data.openid}&lang=zh_CN',(a,b,c) =>{
+    console.log(c,'@@@@@@@@@@@2');
+    o.save((err, result) =>{
+      if (err) {
+        return cb();
+      }
+      User.findOne({
+        username: md5(data.openid, 'codevn')
+      }, (e, r) => {
+        return cb(r);
+      })
+    });
+  });
 }
-
-
-
 
 
 'use strict'
