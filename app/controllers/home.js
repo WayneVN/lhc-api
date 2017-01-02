@@ -110,7 +110,7 @@ function createWechartUser(data, cb) {
   User.findOne({
     username: md5(data.openid, 'codevn')
   }, (e, r) => {
-    if (r._id) {
+    if (r && r._id) {
       return cb(r);
     }
     else {
