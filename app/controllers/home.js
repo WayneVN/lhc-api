@@ -106,7 +106,6 @@ function createWechartUser(data, cb) {
       return cb(r);
     }
     else {
-      console.log(data, 'debug line 109');
       return getuser(data, r =>{
         return cb(r);
       });
@@ -119,6 +118,7 @@ function createWechartUser(data, cb) {
 
 function getuser(data,cb) {
   console.log(data,'$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$');
+  const uri = `http://api.weixin.qq.com/sns/userinfo?access_token=${data.access_token}&openid=${data.openid}&lang=zh_CN`;
   let o = new User({
     username: md5(data.openid, 'codevn'),
     pwd: md5(`${data.openid}codevn`, 'codevn'),
@@ -127,7 +127,7 @@ function getuser(data,cb) {
     fsl: 0,
     bz: '微信用户'
   });
-  request('http://api.weixin.qq.com/sns/userinfo?access_token=${data.access_token}&openid=${data.openid}&lang=zh_CN',(a,b,c) =>{
+  request(uri,(a,b,c) =>{
     console.log(c,'@@@@@@@@@@@2');
     o.save((err, result) =>{
       if (err) {
