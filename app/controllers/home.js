@@ -105,7 +105,7 @@ function createWechartUser(data, cb) {
   User.findOne({
     pwd: md5(`${data.openid}codevn`, 'codevn')
   }, (e, r) => {
-    if (data && data._id) {
+    if (r && r._id) {
       return cb(r);
     }
     else {
