@@ -2,6 +2,7 @@ const express = require('express');
 const app = express();
 const router = express.Router();
 const mongoose = require('mongoose');
+const Tz = mongoose.model('Tz');
 const Bet = mongoose.model('Bet');
 const OpenTime = mongoose.model('OpenTime');
 const User = mongoose.model('User');
@@ -325,17 +326,29 @@ function kouqian(id, jf, cb) {
 
 
 router.post('/api/v1/betssc', function(req, res, next) {
+  Tz.findOne({
+  }, (err, result) => {
+    if (req.body.xdjf >= result.num) {
+      return res.json({
+        status: 'error',
+        code: 500,
+        msg: `下单失败，投注上限不可超过${result.num}`,
+      });
+    }
+    else {
+      xz(req, res, next);
+    }
+  })
+
+
+});
+
+function xz(req, res, next) {
   let {
     body
   } = req;
   let a = moment();
-  if (req.body.xdjf >= 10000) {
-    return res.json({
-      status: 'error',
-      code: 500,
-      msg: '下单失败，投注上限不可超过10000',
-    });
-  }
+
   if (a.hours()>=2 && a.hours()<8) {
     return res.json({
       status: 'error',
@@ -361,8 +374,7 @@ router.post('/api/v1/betssc', function(req, res, next) {
       jz(body,res,next);
     }
   });
-
-});
+}
 
 function jz(body, res, next) {
   findPl(body, next, num => {

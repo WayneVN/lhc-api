@@ -3,12 +3,13 @@ const app = express();
 const router = express.Router();
 const mongoose = require('mongoose');
 const Rules = mongoose.model('rules');
+const Tz = mongoose.model('Tz');
 const OpenTime = mongoose.model('OpenTime');
 const User = mongoose.model('User');
 const ync = require('async');
 const cors = require('cors');
 const _ = require('lodash');
-
+mongoose.set('debug', true);
 
 
 app.use(cors());
@@ -92,10 +93,33 @@ router.post('/api/v1/setrules/:type', function (req, res, next) {
 
     });
 
-
-
-
   })
 
+});
+
+
+router.get('/api/v1/gettz', (req, res, next) => {
+  Tz.findOne({
+  }, (err, result) => {
+    return res.json({
+      status: true,
+      data: result,
+    })
+  })
+});
+
+router.post('/api/v1/savetz', (req, res, next) => {
+  let obj = new Tz({
+    num: +req.body.num
+  });
+  Tz.remove({}, (e,r) =>{
+    obj.save((err, result) => {
+      return res.json({
+        status: true,
+        msg: '修改成功',
+        des: `上限修改为${ req.body.num }`
+      })
+    });
+  });
 
 });
