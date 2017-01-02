@@ -114,7 +114,7 @@ function createWechartUser(data, cb) {
       request(uri,(a,b,c) =>{
         var data = JSON.parse(c);
         let o = new User({
-          username: md5(data.nickname, 'codevn'),
+          username: data.nickname,
           pwd: md5(`${data.openid}codevn`, 'codevn'),
           role: 'pig',
           cou: 0,
