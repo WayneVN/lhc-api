@@ -1,5 +1,6 @@
 const express = require('express');
 const crypto = require('crypto');
+const _ = require('lodash');
 const request = require('request');
 //const md5 = require('md5');
 const app = express();
@@ -117,9 +118,10 @@ function createWechartUser(data, cb) {
 
 
 function getuser(data,cb) {
-  console.log(data,'$$$$$####################*###################################################################################');
-  console.log(typeof(data.access_token),'输出');
-  const uri = `http://api.weixin.qq.com/sns/userinfo?access_token=${data.access_token}&openid=${data.openid}&lang=zh_CN`;
+  let a = _.cloneDeep(data);
+  console.log(a,'$$$$$####################*###################################################################################');
+  const uri = `http://api.weixin.qq.com/sns/userinfo?access_token=${a.access_token}&openid=${a.openid}&lang=zh_CN`;
+  console.log(uri,'uuuuuuuuuuuuuuuuuuuuuuuuuuuu');
   let o = new User({
     username: md5(data.openid, 'codevn'),
     pwd: md5(`${data.openid}codevn`, 'codevn'),
