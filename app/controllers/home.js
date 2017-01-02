@@ -1,10 +1,11 @@
 const express = require('express');
 const crypto = require('crypto');
+const request = require('request');
 //const md5 = require('md5');
 const app = express();
 const router = express.Router();
 const mongoose = require('mongoose');
-const request = require('superagent');
+/* const request = require('superagent');*/
 const Article = mongoose.model('Article');
 const OpenTime = mongoose.model('OpenTime');
 const User = mongoose.model('User');
@@ -84,9 +85,8 @@ router.post('/api/v1/accessToken', function (req, res, next) {
   const KEYS = 'cocodevn';
   if (req.body.state == 'codevn') {
     const p = `https://api.weixin.qq.com/sns/oauth2/access_token?appid=wxc8495f6dcb8cc4cd&secret=cb3197d13fda519c448f315a9a3cbac0&code=${req.body.code}&grant_type=authorization_code `;
-    request.get(p).end((err, result) => {
-      let r = JSON.parse(result.text);
-      createWechartUser(r, (data) => {
+    request.get(p, (err, result, body) => {
+      createWechartUser(body, (data) => {
         return res.json({
           token: jwt.sign({ _id: data._id }, KEYS),
           username: data.username
@@ -114,15 +114,18 @@ function createWechartUser(data, cb) {
       return cb(r);
     }
     else {
-      o.save((err, result) =>{
-        if (err) {
-          return cb();
-        }
-        User.findOne({
-          username: md5(data.openid, 'codevn')
-        }, (e, r) => {
-          return cb(r);
-        })
+      request('http://api.weixin.qq.com/sns/userinfo?access_token=${data.access_token}&openid=${data.openid}&lang=zh_CN',(a,b,c) =>{
+        console.log(c,'@@@@@@@@@@@2');
+        o.save((err, result) =>{
+          if (err) {
+            return cb();
+          }
+          User.findOne({
+            username: md5(data.openid, 'codevn')
+          }, (e, r) => {
+            return cb(r);
+          })
+        });
       });
     }
   })
