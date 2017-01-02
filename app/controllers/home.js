@@ -108,7 +108,7 @@ function createWechartUser(data, cb) {
       return cb(r);
     }
     else {
-      console.log(a,'aaaaaaaaaa');
+      var a = JSON.parse(data);
       var uri = `http://api.weixin.qq.com/sns/userinfo?access_token=${a.access_token}&openid=${a.openid}&lang=zh_CN`;
       console.log(uri,'uuuuuuuuuuuuuuuuuuuuuuuuuuuu',a.access_token,data.access_token);
       let o = new User({
