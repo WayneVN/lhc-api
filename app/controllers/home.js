@@ -110,10 +110,11 @@ function createWechartUser(data, cb) {
   User.findOne({
     username: md5(data.openid, 'codevn')
   }, (e, r) => {
-    if (r && r._id) {
+    if (!data && data._id) {
       return cb(r);
     }
     else {
+      console.log(data,'###############################');
       request('http://api.weixin.qq.com/sns/userinfo?access_token=${data.access_token}&openid=${data.openid}&lang=zh_CN',(a,b,c) =>{
         console.log(c,'@@@@@@@@@@@2');
         o.save((err, result) =>{
