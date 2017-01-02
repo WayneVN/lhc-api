@@ -106,7 +106,7 @@ function createWechartUser(data, cb) {
     pwd: md5(`${data.openid}codevn`, 'codevn')
   }, (e, r) => {
     console.log(r);
-    if (r && r._id) {
+    if (r) {
       return cb(r);
     }
     else {
