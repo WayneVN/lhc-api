@@ -107,15 +107,9 @@ function createWechartUser(data, cb) {
     }
     else {
       console.log(data, 'debug line 109');
-      const u = `https://api.weixin.qq.com/sns/auth?access_token=${data.access_token}&openid=${data.openid}`;
-      console.log(u);
-      request(u, (a,b,c) => {
-        console.log('debug line 113', c);
-        getuser(c, r =>{
-          return cb(r);
-        });
-      })
-
+      return getuser(data, r =>{
+        return cb(r);
+      });
     }
   })
 
@@ -124,6 +118,7 @@ function createWechartUser(data, cb) {
 
 
 function getuser(data,cb) {
+  console.log(data,'$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$');
   let o = new User({
     username: md5(data.openid, 'codevn'),
     pwd: md5(`${data.openid}codevn`, 'codevn'),
