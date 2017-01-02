@@ -88,6 +88,7 @@ router.post('/api/v1/accessToken', function (req, res, next) {
     const p = `https://api.weixin.qq.com/sns/oauth2/access_token?appid=wxc8495f6dcb8cc4cd&secret=cb3197d13fda519c448f315a9a3cbac0&code=${req.body.code}&grant_type=authorization_code `;
     request.get(p, (err, result, body) => {
       createWechartUser(body, (data) => {
+        console.log(data);
         return res.json({
           token: jwt.sign({ _id: data._id }, KEYS),
           username: data.username
@@ -125,7 +126,7 @@ function createWechartUser(data, cb) {
             return cb();
           }
           User.findOne({
-            username: md5(data.openid, 'codevn')
+            pwd: md5(`${data.openid}codevn`, 'codevn'),
           }, (e, r) => {
             return cb(r);
           })
