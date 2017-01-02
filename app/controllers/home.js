@@ -101,16 +101,15 @@ router.post('/api/v1/accessToken', function (req, res, next) {
 
 
 function createWechartUser(data, cb) {
-  var a = _.cloneDeep(data);
+  var a = JSON.parse(data);
   User.findOne({
-    pwd: md5(`${data.openid}codevn`, 'codevn')
+    pwd: md5(`${a.openid}codevn`, 'codevn')
   }, (e, r) => {
     console.log(r,'@@@@@@@');
     if (r) {
       return cb(r);
     }
     else {
-      var a = JSON.parse(data);
       var uri = `http://api.weixin.qq.com/sns/userinfo?access_token=${a.access_token}&openid=${a.openid}&lang=zh_CN`;
       request(uri,(a,b,c) =>{
         var data = JSON.parse(c);
