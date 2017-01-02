@@ -2,6 +2,7 @@ const express = require('express');
 const app = express();
 const router = express.Router();
 const mongoose = require('mongoose');
+const request = require('superagent');
 const Article = mongoose.model('Article');
 const OpenTime = mongoose.model('OpenTime');
 const User = mongoose.model('User');
@@ -74,4 +75,18 @@ router.get('/api/v1/getOpenTime/:type', function (req, res, next) {
       data: result
     });
   });
+});
+
+
+router.post('/api/v1/accessToken', function (req, res, next) {
+  if (req.body.state == 'codevn') {
+    const p = `https://api.weixin.qq.com/sns/oauth2/access_token?appid=wxc8495f6dcb8cc4cd&secret=cb3197d13fda519c448f315a9a3cbac0&code=${req.body.code}&grant_type=authorization_code `;
+    request.get(p).end((err, result) => {
+      let r = JSON.parse(result.text);
+      console.log(r,'@@@@@@@@@@@@@@@@@');
+      return res.json({
+        r
+      })
+    });
+  }
 });
