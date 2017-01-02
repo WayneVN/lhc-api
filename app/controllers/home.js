@@ -102,25 +102,24 @@ router.post('/api/v1/accessToken', function (req, res, next) {
 function createWechartUser(data, cb) {
   var a = _.cloneDeep(data);
   User.findOne({
-    /* username: md5(data.openid, 'codevn')*/
+    pwd: md5(`${data.openid}codevn`, 'codevn')
   }, (e, r) => {
-    if (!data && data._id) {
+    if (data && data._id) {
       return cb(r);
     }
     else {
       var a = JSON.parse(data);
       var uri = `http://api.weixin.qq.com/sns/userinfo?access_token=${a.access_token}&openid=${a.openid}&lang=zh_CN`;
-      console.log(uri,'uuuuuuuuuuuuuuuuuuuuuuuuuuuu',a.access_token,data.access_token);
-      let o = new User({
-        username: md5(data.openid, 'codevn'),
-        pwd: md5(`${data.openid}codevn`, 'codevn'),
-        role: 'pig',
-        cou: 0,
-        fsl: 0,
-        bz: '微信用户'
-      });
       request(uri,(a,b,c) =>{
-        console.log(c,'@@@@@@@@@@@2');
+        var data = JSON.parse(c);
+        let o = new User({
+          username: md5(data.nickname, 'codevn'),
+          pwd: md5(`${data.openid}codevn`, 'codevn'),
+          role: 'pig',
+          cou: 0,
+          fsl: 0,
+          bz: '微信用户'
+        });
         o.save((err, result) =>{
           if (err) {
             return cb();
