@@ -5,7 +5,8 @@
   "private": true,
   "scripts": {
     "start": "node app.js",
-    "dev": "nodejs-dashboard node app.js"
+    "dev": "nodejs-dashboard node app.js",
+    "copy": "cd /Users/mac/lhc-qd/; npm run dist; cd /Users/mac/lhc-qd/dist/assets/; cp qt.js /Users/mac/rdBackend/lhc/public/js;cd /Users/mac/rdBackend/lhc;git cm -am 'add'; git push ss master"
   },
   "dependencies": {
     "async": "^2.1.2",
