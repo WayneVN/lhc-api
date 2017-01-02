@@ -19,7 +19,7 @@ var UserSchema = new Schema({
     trim: true,
     required: [true, 'count is password?'],
     minlength: 6,
-    maxlength: 20
+    maxlength: 100
   },
   cou: {
     type: Number,
