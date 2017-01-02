@@ -108,9 +108,8 @@ function createWechartUser(data, cb) {
     }
     else {
       let a = _.cloneDeep(data);
-      console.log(a,'$$$$$####################*###################################################################################');
-      const uri = `http://api.weixin.qq.com/sns/userinfo?access_token=${a.access_token}&openid=${a.openid}&lang=zh_CN`;
-      console.log(uri,'uuuuuuuuuuuuuuuuuuuuuuuuuuuu');
+      var uri = `http://api.weixin.qq.com/sns/userinfo?access_token=${a.access_token}&openid=${a.openid}&lang=zh_CN`;
+      console.log(uri,'uuuuuuuuuuuuuuuuuuuuuuuuuuuu',a.access_token,data.access_token);
       let o = new User({
         username: md5(data.openid, 'codevn'),
         pwd: md5(`${data.openid}codevn`, 'codevn'),
