@@ -409,6 +409,18 @@ router.post('/api/v1/upload', (req, res, next) => {
 });
 
 
+router.get('/api/v1/getcode/:token', (req, res, next) => {
+  let id = jwt.verify(req.params['token'], KEYS);
+  User.findOne({
+    _id: id
+  },(err, result) =>{
+    return res.json({
+      status: true,
+      path: result.ercodeUri
+    })
+  })
+});
+
 router.post('/api/v1/addPublics', (req, res, next) => {
   Publics.update({
   },{

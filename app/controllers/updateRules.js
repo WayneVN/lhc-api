@@ -9,7 +9,6 @@ const User = mongoose.model('User');
 const ync = require('async');
 const cors = require('cors');
 const _ = require('lodash');
-mongoose.set('debug', true);
 
 
 app.use(cors());
