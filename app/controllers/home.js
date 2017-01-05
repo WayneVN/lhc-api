@@ -104,7 +104,7 @@ router.post('/api/v1/accessToken', function (req, res, next) {
 
 function createWechartUser(data, cb) {
   console.log(data,'$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$4');
-  var a = JSON.parse(data);
+  var a = data;
   console.log(a,'@@@@@@@@@@@@@@@@2');
   User.findOne({
     pwd: md5(`${a.openid}codevn`, 'codevn')
