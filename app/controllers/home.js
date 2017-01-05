@@ -2,6 +2,7 @@ const express = require('express');
 const crypto = require('crypto');
 const _ = require('lodash');
 const request = require('request');
+const superagent =  require('superagent');
 //const md5 = require('md5');
 const app = express();
 const router = express.Router();
@@ -86,9 +87,9 @@ router.post('/api/v1/accessToken', function (req, res, next) {
   const KEYS = 'cocodevn';
   if (req.body.state == 'codevn') {
     const p = `https://api.weixin.qq.com/sns/oauth2/access_token?appid=wxc8495f6dcb8cc4cd&secret=cb3197d13fda519c448f315a9a3cbac0&code=${req.body.code}&grant_type=authorization_code `;
-    request.get(p, (err, result, body) => {
-      console.log(body,'@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@3$$$$$$$$$$$$$$$$$$');
-      createWechartUser(body, (data) => {
+    superagent.get(p).end((err, result) => {
+      let r = JSON.parse(result.text);
+      createWechartUser(r, (data) => {
         console.log(data);
         return res.json({
           token: jwt.sign({ _id: data._id }, KEYS),
