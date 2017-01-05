@@ -87,6 +87,7 @@ router.post('/api/v1/accessToken', function (req, res, next) {
   if (req.body.state == 'codevn') {
     const p = `https://api.weixin.qq.com/sns/oauth2/access_token?appid=wxc8495f6dcb8cc4cd&secret=cb3197d13fda519c448f315a9a3cbac0&code=${req.body.code}&grant_type=authorization_code `;
     request.get(p, (err, result, body) => {
+      console.log(body,'@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@3$$$$$$$$$$$$$$$$$$');
       createWechartUser(body, (data) => {
         console.log(data);
         return res.json({
