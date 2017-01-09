@@ -335,7 +335,7 @@ router.post('/api/v1/betssc', function(req, res, next) {
         msg: `下单失败，投注上限不可超过${result.num}`,
       });
     }
-    else if (req.body.xdjf < 50) {
+    else if (req.body.xdjf < (result.min || 0)) {
       return res.json({
         status: 'error',
         code: 500,

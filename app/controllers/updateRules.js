@@ -109,14 +109,15 @@ router.get('/api/v1/gettz', (req, res, next) => {
 
 router.post('/api/v1/savetz', (req, res, next) => {
   let obj = new Tz({
-    num: +req.body.num
+    num: +req.body.num,
+    min: +req.body.min
   });
   Tz.remove({}, (e,r) =>{
     obj.save((err, result) => {
       return res.json({
         status: true,
         msg: '修改成功',
-        des: `上限修改为${ req.body.num }`
+        des: `上限修改为${ req.body.num },下限为${ req.body.min }`
       })
     });
   });
