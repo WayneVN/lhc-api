@@ -33,6 +33,8 @@ router.get('/', function (req, res, next) {
   });
 });
 
+router.post('/test', (req, res, next) => res.json({a:1}));
+
 router.get('/admin', function (req, res, next) {
   return res.render('admin', {
     title: 'CC System'
